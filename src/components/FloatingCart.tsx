@@ -5,7 +5,7 @@ import { ShoppingCart, ArrowRight } from "lucide-react";
 
 export const FloatingCart = () => {
   // TODO: Replace with actual cart state
-  const itemCount = 3; // Made visible for demo purposes
+  const itemCount = 0; // Hidden until cart functionality is implemented
   const totalAmount = 789;
 
   if (itemCount === 0) return null;
