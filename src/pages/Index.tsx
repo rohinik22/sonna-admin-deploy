@@ -1,12 +1,39 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { Header } from "@/components/Header";
+import { HeroSection } from "@/components/HeroSection";
+import { CategoryNav } from "@/components/CategoryNav";
+import { MenuSection } from "@/components/MenuSection";
+import { StorySection } from "@/components/StorySection";
+import { FloatingCart } from "@/components/FloatingCart";
+import { BottomNav } from "@/components/BottomNav";
 
 const Index = () => {
+  const [activeCategory, setActiveCategory] = useState("cakes");
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="text-4xl font-bold mb-4">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="min-h-screen bg-background pb-20">
+      {/* Fixed Header */}
+      <Header />
+      
+      {/* Hero Section */}
+      <HeroSection />
+      
+      {/* Category Navigation */}
+      <CategoryNav />
+      
+      {/* Menu Content */}
+      <main className="pb-6">
+        <MenuSection categoryId={activeCategory} />
+        
+        {/* Story Section */}
+        <StorySection />
+      </main>
+      
+      {/* Floating Cart */}
+      <FloatingCart />
+      
+      {/* Bottom Navigation */}
+      <BottomNav />
     </div>
   );
 };
