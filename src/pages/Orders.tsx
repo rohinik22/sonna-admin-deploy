@@ -1,5 +1,6 @@
 
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
 import { FloatingCart } from "@/components/FloatingCart";
@@ -22,6 +23,7 @@ interface Order {
 }
 
 const Orders = () => {
+  const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
 
   useEffect(() => {
