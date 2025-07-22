@@ -4,7 +4,8 @@ import { Badge } from "@/components/ui/badge";
 import { ShoppingCart, ArrowRight } from "lucide-react";
 
 export const FloatingCart = () => {
-  const itemCount = 3;
+  // TODO: Replace with actual cart state
+  const itemCount = 0; // Will be dynamic when connected to cart state
   const totalAmount = 789;
 
   if (itemCount === 0) return null;
