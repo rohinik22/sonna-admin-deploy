@@ -2,9 +2,11 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Minus, Star, Info, ChefHat } from "lucide-react";
+import { Plus, Minus, Star, Info, ChefHat, Heart } from "lucide-react";
 import { MenuItem } from "@/data/menuData";
 import { NutritionalInfo } from "@/components/NutritionalInfo";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 import {
   Collapsible,
   CollapsibleContent,
@@ -17,15 +19,54 @@ interface FoodCardProps {
 }
 
 export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
-  const [quantity, setQuantity] = useState(0);
   const [showDetails, setShowDetails] = useState(false);
+  const [selectedCustomizations, setSelectedCustomizations] = useState<string[]>([]);
+  
+  const { state: cart, addItem, updateQuantity } = useCart();
+  const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
+  
+  // Find current quantity in cart
+  const cartItem = cart.items.find(cartItem => 
+    cartItem.id === item.id && 
+    JSON.stringify(cartItem.customizations) === JSON.stringify(selectedCustomizations)
+  );
+  const quantity = cartItem?.quantity || 0;
 
   const handleAddToCart = () => {
-    if (quantity === 0) setQuantity(1);
+    addItem(item, selectedCustomizations);
   };
 
-  const handleIncrement = () => setQuantity(prev => prev + 1);
-  const handleDecrement = () => setQuantity(prev => Math.max(0, prev - 1));
+  const handleIncrement = () => {
+    if (quantity === 0) {
+      addItem(item, selectedCustomizations);
+    } else {
+      updateQuantity(item.id, quantity + 1);
+    }
+  };
+
+  const handleDecrement = () => {
+    if (quantity > 0) {
+      updateQuantity(item.id, quantity - 1);
+    }
+  };
+
+  const handleWishlistToggle = () => {
+    if (isInWishlist(item.id)) {
+      removeFromWishlist(item.id);
+    } else {
+      addToWishlist(item);
+    }
+  };
+
+  const handleCustomizationToggle = (customization: string) => {
+    setSelectedCustomizations(prev => {
+      if (prev.includes(customization)) {
+        return prev.filter(c => c !== customization);
+      } else {
+        return [...prev, customization];
+      }
+    });
+  };
 
   return (
     <div className="food-card relative overflow-hidden">
@@ -50,6 +91,18 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
         )}
       </div>
 
+      {/* Wishlist Button */}
+      <Button
+        variant="ghost"
+        size="icon"
+        className="absolute top-3 right-3 z-10 w-8 h-8 bg-white/80 hover:bg-white"
+        onClick={handleWishlistToggle}
+      >
+        <Heart 
+          className={`w-4 h-4 ${isInWishlist(item.id) ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} 
+        />
+      </Button>
+
       {/* Food Image */}
       <div className="relative h-40 bg-muted rounded-xl mb-4 overflow-hidden">
         {item.image ? (
@@ -61,7 +114,7 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
         )}
         
         {/* 100% Veg Indicator */}
-        <div className="absolute top-3 right-3">
+        <div className="absolute bottom-3 left-3">
           <div className="w-6 h-6 border-2 border-success bg-white rounded-sm flex items-center justify-center">
             <div className="w-3 h-3 bg-success rounded-full" />
           </div>
@@ -71,8 +124,8 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
       {/* Food Info */}
       <div className="space-y-3">
         <div>
-          <h3 className="font-bold text-lg text-foreground mb-1">{item.name}</h3>
-          <p className="text-sm text-muted-foreground leading-relaxed">
+          <h3 className="font-bold text-lg text-foreground mb-1 font-playfair">{item.name}</h3>
+          <p className="text-sm text-muted-foreground leading-relaxed font-poppins">
             {item.description}
           </p>
         </div>
@@ -80,12 +133,32 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
         {/* Nutritional transparency - compact view */}
         <NutritionalInfo item={item} compact />
 
+        {/* Customizations */}
+        {item.customizations.length > 0 && (
+          <div className="space-y-2">
+            <p className="text-sm font-medium font-poppins">Customize:</p>
+            <div className="space-y-1">
+              {item.customizations.map((customization, idx) => (
+                <label key={idx} className="flex items-center gap-2 text-xs cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={selectedCustomizations.includes(customization)}
+                    onChange={() => handleCustomizationToggle(customization)}
+                    className="rounded"
+                  />
+                  <span className="font-poppins">{customization}</span>
+                </label>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Pricing */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-xl text-primary">₹{item.price}</span>
+            <span className="font-bold text-xl text-primary font-poppins">₹{item.price}</span>
             {item.originalPrice && (
-              <span className="text-sm text-muted-foreground line-through">
+              <span className="text-sm text-muted-foreground line-through font-poppins">
                 ₹{item.originalPrice}
               </span>
             )}
@@ -95,7 +168,7 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
           {quantity === 0 ? (
             <Button 
               onClick={handleAddToCart}
-              className="quick-add bg-primary text-primary-foreground hover:bg-primary/90 px-6"
+              className="quick-add bg-primary text-primary-foreground hover:bg-primary/90 px-6 font-poppins"
             >
               <Plus className="w-4 h-4 mr-2" />
               Add
@@ -110,7 +183,7 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
               >
                 <Minus className="w-3 h-3" />
               </Button>
-              <span className="font-bold min-w-[2rem] text-center">{quantity}</span>
+              <span className="font-bold min-w-[2rem] text-center font-poppins">{quantity}</span>
               <Button 
                 onClick={handleIncrement}
                 size="sm"
@@ -125,27 +198,13 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
         {/* Expandable details */}
         <Collapsible open={showDetails} onOpenChange={setShowDetails}>
           <CollapsibleTrigger asChild>
-            <Button variant="ghost" className="w-full text-sm text-muted-foreground">
+            <Button variant="ghost" className="w-full text-sm text-muted-foreground font-poppins">
               <Info className="w-4 h-4 mr-2" />
               {showDetails ? 'Hide' : 'Show'} Details
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent>
             <NutritionalInfo item={item} />
-            
-            {/* Customizations */}
-            {item.customizations.length > 0 && (
-              <div className="mt-3 p-3 bg-accent/10 rounded-lg">
-                <p className="text-sm font-medium mb-2">Customize your order:</p>
-                <div className="space-y-1">
-                  {item.customizations.map((customization, idx) => (
-                    <div key={idx} className="flex items-center justify-between text-xs">
-                      <span>{customization}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
           </CollapsibleContent>
         </Collapsible>
       </div>

@@ -1,7 +1,10 @@
 
 import { ShoppingCart, Star, Heart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
+import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/contexts/WishlistContext";
 
 interface HeaderProps {
   showBack?: boolean;
@@ -11,6 +14,8 @@ interface HeaderProps {
 
 export const Header = ({ showBack, onBack, title }: HeaderProps) => {
   const navigate = useNavigate();
+  const { state: cart } = useCart();
+  const { wishlistItems } = useWishlist();
 
   const handleLogoClick = () => {
     navigate('/');
@@ -72,6 +77,11 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
             onClick={handleWishlistClick}
           >
             <Heart className="w-5 h-5" />
+            {wishlistItems.length > 0 && (
+              <Badge className="absolute -top-1 -right-1 w-5 h-5 text-xs bg-red-500 text-white rounded-full p-0 flex items-center justify-center">
+                {wishlistItems.length}
+              </Badge>
+            )}
           </Button>
           <Button 
             variant="ghost" 
@@ -80,7 +90,11 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
             onClick={handleCartClick}
           >
             <ShoppingCart className="w-5 h-5" />
-            {/* Cart badge removed until cart functionality is implemented */}
+            {cart.itemCount > 0 && (
+              <Badge className="absolute -top-1 -right-1 w-5 h-5 text-xs bg-primary text-primary-foreground rounded-full p-0 flex items-center justify-center">
+                {cart.itemCount}
+              </Badge>
+            )}
           </Button>
         </div>
       </div>
