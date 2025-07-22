@@ -1,7 +1,6 @@
 
 import { ShoppingCart, Star, Heart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
@@ -22,13 +21,11 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
   };
 
   const handleWishlistClick = () => {
-    // TODO: Navigate to wishlist page
-    console.log('Navigate to wishlist');
+    navigate('/wishlist');
   };
 
   const handleCartClick = () => {
-    // TODO: Navigate to cart page
-    console.log('Navigate to cart');
+    navigate('/cart');
   };
 
   return (
@@ -47,10 +44,12 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
             className="flex items-start gap-2 transition-transform duration-200 hover:scale-105"
           >
             <div>
-              <h1 className="text-xl font-bold text-primary">
+              <h1 className="text-xl font-bold text-primary font-playfair">
                 {title || "Sonna's"}
               </h1>
-              <p className="text-xs text-muted-foreground -mt-1">Made with Love ❤️</p>
+              <p className="text-xs text-muted-foreground -mt-1 font-dancing">
+                Made with Love ❤️
+              </p>
             </div>
           </button>
         </div>
@@ -61,7 +60,7 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
           className="flex items-center gap-2 mx-4 px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-all duration-200 hover:scale-105"
         >
           <Star className="w-3 h-3 text-primary fill-current" />
-          <span className="text-xs font-medium text-primary">1,250 pts</span>
+          <span className="text-xs font-medium text-primary font-poppins">1,250 pts</span>
         </button>
         
         {/* Right side */}
@@ -81,12 +80,7 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
             onClick={handleCartClick}
           >
             <ShoppingCart className="w-5 h-5" />
-            <Badge 
-              variant="destructive" 
-              className="absolute -top-1 -right-1 w-5 h-5 text-xs rounded-full p-0 flex items-center justify-center animate-pulse"
-            >
-              3
-            </Badge>
+            {/* Cart badge removed until cart functionality is implemented */}
           </Button>
         </div>
       </div>

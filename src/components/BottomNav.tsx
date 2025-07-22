@@ -27,7 +27,7 @@ export const BottomNav = () => {
               key={item.id}
               onClick={() => navigate(item.path)}
               className={cn(
-                "nav-item haptic-light transition-all duration-200 hover:scale-105",
+                "nav-item haptic-light transition-all duration-200 hover:scale-105 font-poppins",
                 isActive && "active"
               )}
               aria-label={`Navigate to ${item.label}`}
