@@ -19,14 +19,14 @@ const Index = () => {
       <Header />
       
       {!activeCategory ? (
-        // Landing state - maximum simplicity
-        <>
+        // Landing state - maximum cognitive simplicity
+        <div className="space-y-8">
           <LandingHero />
           <SonnaRecommends onViewCategory={setActiveCategory} />
           <CategoryGrid onSelectCategory={setActiveCategory} />
-        </>
+        </div>
       ) : (
-        // Category selected state
+        // Category selected state - progressive disclosure
         <MenuSection 
           categoryId={activeCategory} 
           onBack={() => setActiveCategory(null)}

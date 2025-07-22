@@ -16,7 +16,7 @@ export const BottomNav = () => {
   const location = useLocation();
 
   return (
-    <nav className="mobile-nav">
+    <nav className="nav-primary">
       <div className="flex items-center justify-around">
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -27,14 +27,14 @@ export const BottomNav = () => {
               key={item.id}
               onClick={() => navigate(item.path)}
               className={cn(
-                "flex flex-col items-center gap-1 py-2 px-3 rounded-lg transition-smooth touch-target",
-                isActive 
-                  ? "text-primary" 
-                  : "text-muted-foreground hover:text-foreground"
+                "nav-item haptic-light",
+                isActive && "active"
               )}
+              aria-label={`Navigate to ${item.label}`}
+              aria-current={isActive ? "page" : undefined}
             >
               <Icon className="w-5 h-5" />
-              <span className="text-xs font-medium">{item.label}</span>
+              <span className="text-micro font-medium">{item.label}</span>
             </button>
           );
         })}

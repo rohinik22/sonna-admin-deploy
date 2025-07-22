@@ -1,120 +1,132 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Somas Cafe Design System - Mobile-First Food Delivery App 
-All colors MUST be HSL. Warm, appetizing cafe aesthetic.
+/* Somas Cafe Design System - Steve Jobs Philosophy Implementation
+Dynamic color system with semantic tokens that auto-adapt
+Human-first minimalism with contextual fluidity
 */
 
 @layer base {
   :root {
-    /* Core Background & Text */
-    --background: 35 20% 98%;           /* Warm cream background */
-    --foreground: 25 25% 15%;           /* Rich dark brown text */
+    /* Core Semantic Tokens - Dynamic Foundation */
+    --background: 35 20% 98%;           /* Warm cream - adapts to context */
+    --foreground: 25 25% 15%;           /* Rich dark brown - readable */
+    --surface: 0 0% 100%;               /* Pure surface */
+    --surface-variant: 35 15% 95%;      /* Subtle surface variation */
 
-    /* Card System */
-    --card: 0 0% 100%;                  /* Pure white cards */
-    --card-foreground: 25 25% 15%;      /* Dark brown on cards */
+    /* Primary Brand - Food & Warmth */
+    --primary: 25 85% 55%;              /* Warm orange - appetizing */
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 25 85% 95%;         /* Soft primary background */
+    --primary-emphasis: 25 90% 50%;     /* Enhanced primary for CTAs */
 
-    /* Popover & Overlays */
-    --popover: 0 0% 100%;
-    --popover-foreground: 25 25% 15%;
+    /* Semantic Status Colors */
+    --success: 120 60% 45%;             /* Fresh green */
+    --success-soft: 120 60% 95%;
+    --warning: 45 90% 60%;              /* Golden attention */
+    --warning-soft: 45 90% 95%;
+    --error: 0 75% 55%;                 /* Warm red */
+    --error-soft: 0 75% 95%;
 
-    /* Primary Brand - Warm Orange (Cafe/Food) */
-    --primary: 25 85% 55%;              /* Warm orange primary */
-    --primary-foreground: 0 0% 100%;     /* White on primary */
-    --primary-glow: 25 85% 65%;         /* Lighter orange glow */
+    /* Contextual Grays - Perfect Hierarchy */
+    --muted: 35 15% 92%;                /* Background elements */
+    --muted-foreground: 25 15% 45%;     /* Secondary text */
+    --border: 35 20% 85%;               /* Subtle boundaries */
+    --input: 35 20% 90%;                /* Input backgrounds */
+    --ring: 25 85% 55%;                 /* Focus rings */
 
-    /* Secondary - Coffee Brown */
-    --secondary: 25 25% 20%;            /* Rich coffee brown */
-    --secondary-foreground: 0 0% 100%;   /* White on secondary */
+    /* Interactive States */
+    --hover: 25 85% 60%;                /* Hover enhancement */
+    --pressed: 25 85% 50%;              /* Active press state */
+    --disabled: 35 15% 75%;             /* Disabled state */
 
-    /* Muted - Neutral Warm */
-    --muted: 35 15% 92%;                /* Light warm neutral */
-    --muted-foreground: 25 15% 45%;     /* Medium brown text */
+    /* Typography Scale - Variable Font Ready */
+    --font-size-xs: 0.75rem;            /* 12px */
+    --font-size-sm: 0.875rem;           /* 14px */
+    --font-size-base: 1rem;             /* 16px - WCAG base */
+    --font-size-lg: 1.125rem;           /* 18px */
+    --font-size-xl: 1.25rem;            /* 20px */
+    --font-size-2xl: 1.5rem;            /* 24px */
+    --font-size-3xl: 1.875rem;          /* 30px */
+    --font-size-4xl: 2.25rem;           /* 36px */
 
-    /* Accent - Golden Yellow (Loyalty/Special) */
-    --accent: 45 90% 60%;               /* Golden yellow accent */
-    --accent-foreground: 25 25% 15%;     /* Dark text on accent */
+    /* Line Heights - 1.2-1.4 Vertical Rhythm */
+    --line-height-tight: 1.2;
+    --line-height-normal: 1.4;
+    --line-height-relaxed: 1.6;
 
-    /* Success - Fresh Green */
-    --success: 120 60% 45%;             /* Fresh vegetarian green */
-    --success-foreground: 0 0% 100%;
+    /* Touch Targets - WCAG 2.5.8 Compliant */
+    --touch-target-min: 44px;           /* Minimum accessible touch */
+    --touch-target-comfortable: 48px;   /* Comfortable touch */
+    --spacing-buffer: 20px;             /* Spacing buffer around small targets */
 
-    /* Destructive - Warm Red */
-    --destructive: 0 75% 55%;
-    --destructive-foreground: 0 0% 100%;
+    /* Radius Scale - Contextual */
+    --radius-sm: 0.5rem;                /* 8px - Small elements */
+    --radius: 0.75rem;                  /* 12px - Default */
+    --radius-lg: 1rem;                  /* 16px - Cards */
+    --radius-xl: 1.5rem;                /* 24px - Major surfaces */
 
-    /* Borders & Inputs */
-    --border: 35 20% 85%;               /* Soft warm border */
-    --input: 35 20% 90%;                /* Input background */
-    --ring: 25 85% 55%;                 /* Primary ring */
+    /* Shadows - Depth Hierarchy */
+    --shadow-sm: 0 1px 2px hsl(var(--primary) / 0.05);
+    --shadow: 0 2px 8px hsl(var(--primary) / 0.1);
+    --shadow-lg: 0 8px 24px hsl(var(--primary) / 0.15);
+    --shadow-xl: 0 16px 48px hsl(var(--primary) / 0.2);
 
-    /* Design System Extensions */
-    --radius: 1rem;                     /* Larger mobile-friendly radius */
-    
-    /* Gradients - Food App Aesthetics */
-    --gradient-primary: linear-gradient(135deg, hsl(var(--primary)), hsl(var(--primary-glow)));
-    --gradient-warm: linear-gradient(135deg, hsl(var(--accent)), hsl(var(--primary)));
-    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(var(--muted)));
-    --gradient-hero: linear-gradient(180deg, hsl(var(--primary-glow)) 0%, hsl(var(--primary)) 100%);
-    
-    /* Shadows - Mobile App Depth */
-    --shadow-card: 0 4px 12px hsl(var(--primary) / 0.1);
-    --shadow-floating: 0 8px 24px hsl(var(--primary) / 0.15);
-    --shadow-button: 0 2px 8px hsl(var(--primary) / 0.2);
-    
-    /* Mobile Transitions */
-    --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    --transition-bounce: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    
-    /* Sidebar (keeping for components) */
-    --sidebar-background: hsl(var(--background));
-    --sidebar-foreground: hsl(var(--foreground));
-    --sidebar-primary: hsl(var(--primary));
-    --sidebar-primary-foreground: hsl(var(--primary-foreground));
-    --sidebar-accent: hsl(var(--muted));
-    --sidebar-accent-foreground: hsl(var(--muted-foreground));
-    --sidebar-border: hsl(var(--border));
-    --sidebar-ring: hsl(var(--ring));
+    /* Animation Timing - Ethical Delight */
+    --duration-instant: 0ms;
+    --duration-fast: 100ms;             /* Immediate feedback */
+    --duration-normal: 200ms;           /* Standard transitions */
+    --duration-slow: 300ms;             /* Complex animations */
+    --duration-slower: 500ms;           /* Page transitions */
+
+    /* Easing - Natural Motion */
+    --ease-out: cubic-bezier(0.2, 0, 0, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+    /* Contextual Adaptations */
+    --interface-brightness: 1;          /* Adapts to ambient light */
+    --motion-preference: 1;             /* Respects reduced motion */
   }
 
+  /* Dark Mode - Contextual Adaptation */
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 25 25% 8%;
+    --foreground: 35 20% 95%;
+    --surface: 25 25% 10%;
+    --surface-variant: 25 20% 15%;
+    
+    --primary: 25 85% 65%;              /* Brighter in dark */
+    --primary-soft: 25 85% 15%;
+    
+    --muted: 25 20% 15%;
+    --muted-foreground: 35 15% 65%;
+    --border: 25 20% 20%;
+    --input: 25 20% 18%;
+    
+    --interface-brightness: 0.8;        /* Dimmed for night */
+  }
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+  /* High Contrast Mode - Accessibility First */
+  @media (prefers-contrast: high) {
+    :root {
+      --foreground: 0 0% 0%;
+      --background: 0 0% 100%;
+      --border: 0 0% 0%;
+    }
+  }
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  /* Reduced Motion - Respect User Preferences */
+  @media (prefers-reduced-motion: reduce) {
+    :root {
+      --motion-preference: 0;
+      --duration-fast: 0ms;
+      --duration-normal: 0ms;
+      --duration-slow: 0ms;
+    }
   }
 }
 
@@ -125,125 +137,329 @@ All colors MUST be HSL. Warm, appetizing cafe aesthetic.
 
   body {
     @apply bg-background text-foreground;
-    /* Mobile-optimized base styles */
-    @apply text-base leading-relaxed;
+    /* Variable font ready */
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+    line-height: var(--line-height-normal);
+    font-size: var(--font-size-base);
+    
+    /* Smooth scrolling and touch */
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    scroll-behavior: smooth;
+    touch-action: manipulation;
+  }
+
+  /* Typography Hierarchy - Semantic Meaning */
+  h1 {
+    font-size: var(--font-size-3xl);
+    line-height: var(--line-height-tight);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  h2 {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-tight);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  h3 {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-normal);
+    font-weight: 600;
+  }
+
+  p {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+    max-width: 40em; /* Reading comfort */
+  }
+
+  /* Interactive Elements - Touch Optimized */
+  button, [role="button"] {
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
+    touch-action: manipulation;
+    user-select: none;
+  }
+
+  /* Focus Management - Accessibility */
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
   }
 }
 
 @layer components {
-  /* Mobile-First Component Classes */
-  .gradient-primary {
-    background: var(--gradient-primary);
+  /* Primary Job-to-be-Done Pattern */
+  .hero-question {
+    @apply text-center space-y-6 max-w-sm mx-auto;
   }
-  
-  .gradient-warm {
-    background: var(--gradient-warm);
+
+  .hero-question h1 {
+    @apply text-3xl font-bold tracking-tight;
+    color: hsl(var(--foreground));
   }
-  
-  .gradient-hero {
-    background: var(--gradient-hero);
+
+  .hero-question p {
+    @apply text-lg;
+    color: hsl(var(--muted-foreground));
   }
-  
-  .shadow-card {
-    box-shadow: var(--shadow-card);
+
+  /* Primary CTA - Steve Jobs Button */
+  .cta-primary {
+    @apply relative px-8 py-4 rounded-xl font-semibold text-lg;
+    @apply bg-primary text-primary-foreground;
+    @apply shadow-lg hover:shadow-xl;
+    @apply transition-all duration-200 ease-out;
+    @apply active:scale-95 active:shadow-sm;
+    min-height: var(--touch-target-comfortable);
+    
+    /* Subtle gradient for depth */
+    background: linear-gradient(135deg, 
+      hsl(var(--primary)), 
+      hsl(var(--primary-emphasis))
+    );
   }
-  
-  .shadow-floating {
-    box-shadow: var(--shadow-floating);
+
+  .cta-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: var(--shadow-xl);
   }
-  
-  .shadow-button {
-    box-shadow: var(--shadow-button);
+
+  /* Secondary Actions */
+  .action-secondary {
+    @apply px-6 py-3 rounded-lg font-medium;
+    @apply bg-surface text-foreground border border-border;
+    @apply hover:bg-muted hover:border-primary/20;
+    @apply transition-all duration-200 ease-out;
+    min-height: var(--touch-target-min);
   }
-  
-  .transition-smooth {
-    transition: var(--transition-smooth);
+
+  /* Card System - Clean Hierarchy */
+  .card-primary {
+    @apply bg-surface rounded-xl p-6 border border-border;
+    @apply shadow-sm hover:shadow-lg;
+    @apply transition-all duration-200 ease-out;
   }
-  
-  .transition-bounce {
-    transition: var(--transition-bounce);
+
+  .card-interactive {
+    @apply card-primary cursor-pointer;
+    @apply hover:scale-[1.02] hover:border-primary/20;
+    @apply active:scale-[0.98];
   }
-  
-  /* Food Card Hover Effect */
-  .food-card {
-    @apply bg-card rounded-2xl p-4 shadow-card transition-smooth;
-    @apply hover:shadow-floating hover:scale-[1.02] active:scale-[0.98];
+
+  /* Navigation - Contextual */
+  .nav-primary {
+    @apply fixed bottom-0 left-0 right-0;
+    @apply bg-surface/95 backdrop-blur-lg border-t border-border;
+    @apply px-4 py-2;
+    box-shadow: 0 -4px 24px hsl(var(--primary) / 0.1);
   }
-  
-  /* Mobile CTA Button */
-  .cta-button {
-    @apply bg-primary text-primary-foreground px-6 py-3 rounded-xl;
-    @apply shadow-button transition-bounce font-medium;
-    @apply hover:shadow-floating active:scale-95;
-    @apply min-h-[48px] min-w-[48px]; /* Touch target compliance */
+
+  .nav-item {
+    @apply flex flex-col items-center gap-1 py-2 px-3 rounded-lg;
+    @apply transition-all duration-200 ease-out;
+    @apply text-muted-foreground hover:text-foreground;
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
   }
-  
-  /* Loyalty Points Shimmer */
-  .loyalty-shimmer {
-    @apply bg-accent text-accent-foreground;
-    background: linear-gradient(90deg, hsl(var(--accent)), hsl(var(--accent) / 0.8), hsl(var(--accent)));
-    background-size: 200% 100%;
-    animation: shimmer 2s infinite;
+
+  .nav-item.active {
+    @apply text-primary bg-primary-soft;
   }
-  
-  /* Quick Add Animation */
-  .quick-add {
-    @apply transition-bounce;
-    @apply hover:scale-110 active:scale-90;
+
+  .nav-item:active {
+    @apply scale-95;
   }
-  
-  /* Mobile Navigation */
-  .mobile-nav {
-    @apply fixed bottom-0 left-0 right-0 bg-card border-t border-border;
-    @apply px-4 py-2 shadow-floating;
+
+  /* Progressive Disclosure Pattern */
+  .disclosure-trigger {
+    @apply flex items-center justify-between w-full p-4;
+    @apply hover:bg-muted/50 transition-colors duration-200;
+    min-height: var(--touch-target-min);
+  }
+
+  /* Status Indicators */
+  .status-success {
+    @apply bg-success-soft text-success border border-success/20;
+  }
+
+  .status-warning {
+    @apply bg-warning-soft text-warning border border-warning/20;
+  }
+
+  .status-error {
+    @apply bg-error-soft text-error border border-error/20;
+  }
+
+  /* Floating Elements */
+  .floating-action {
+    @apply fixed bottom-20 left-4 right-4 z-40;
+    @apply bg-primary text-primary-foreground rounded-xl p-4;
+    @apply shadow-xl backdrop-blur-sm;
+    @apply transition-all duration-200 ease-out;
+    min-height: var(--touch-target-comfortable);
+  }
+
+  /* Loading States - Ethical Feedback */
+  .loading-skeleton {
+    @apply bg-muted animate-pulse rounded;
+  }
+
+  /* Empty States - Encouraging */
+  .empty-state {
+    @apply text-center py-12 px-6 space-y-4;
+  }
+
+  .empty-state-icon {
+    @apply w-16 h-16 mx-auto text-muted-foreground;
+  }
+
+  .empty-state-title {
+    @apply text-xl font-semibold text-foreground;
+  }
+
+  .empty-state-description {
+    @apply text-muted-foreground max-w-sm mx-auto;
   }
 }
 
 @layer utilities {
-  /* Mobile Touch Targets */
+  /* Contextual Spacing */
+  .space-comfortable {
+    gap: var(--spacing-buffer);
+  }
+
+  /* Typography Utilities */
+  .text-hero {
+    font-size: var(--font-size-4xl);
+    line-height: var(--line-height-tight);
+    font-weight: 800;
+    letter-spacing: -0.05em;
+  }
+
+  .text-display {
+    font-size: var(--font-size-3xl);
+    line-height: var(--line-height-tight);
+    font-weight: 700;
+    letter-spacing: -0.025em;
+  }
+
+  .text-heading {
+    font-size: var(--font-size-2xl);
+    line-height: var(--line-height-tight);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+  }
+
+  .text-subheading {
+    font-size: var(--font-size-lg);
+    line-height: var(--line-height-normal);
+    font-weight: 500;
+  }
+
+  .text-body {
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-normal);
+  }
+
+  .text-caption {
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-normal);
+  }
+
+  .text-micro {
+    font-size: var(--font-size-xs);
+    line-height: var(--line-height-tight);
+  }
+
+  /* Touch Targets */
   .touch-target {
-    @apply min-h-[48px] min-w-[48px];
+    min-height: var(--touch-target-min);
+    min-width: var(--touch-target-min);
   }
-  
-  /* Mobile Typography */
-  .heading-mobile {
-    @apply text-2xl font-bold leading-tight;
+
+  .touch-comfortable {
+    min-height: var(--touch-target-comfortable);
+    min-width: var(--touch-target-comfortable);
   }
-  
-  .subheading-mobile {
-    @apply text-lg font-semibold leading-snug;
+
+  /* Motion Utilities */
+  .motion-safe {
+    @media (prefers-reduced-motion: no-preference) {
+      transition-property: transform, opacity, background-color, border-color, color, fill, stroke;
+      transition-duration: var(--duration-normal);
+      transition-timing-function: var(--ease-out);
+    }
   }
-  
-  .body-mobile {
-    @apply text-base leading-relaxed;
+
+  /* Haptic Feedback Simulation */
+  .haptic-light:active {
+    @apply scale-95 transition-transform duration-75;
   }
-  
-  .caption-mobile {
-    @apply text-sm leading-normal;
+
+  .haptic-medium:active {
+    @apply scale-90 transition-transform duration-100;
+  }
+
+  /* Accessibility Helpers */
+  .sr-only-focusable:focus {
+    @apply not-sr-only;
+  }
+
+  /* Content Limitation - Reading Comfort */
+  .prose-narrow {
+    max-width: 35em;
+  }
+
+  .prose-comfortable {
+    max-width: 40em;
   }
 }
 
-/* Animations */
-@keyframes shimmer {
-  0% { background-position: -200% 0; }
-  100% { background-position: 200% 0; }
+/* Custom Animations - Purposeful Motion */
+@keyframes gentle-bounce {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-2px); }
 }
 
-@keyframes pulse-soft {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.8; }
+@keyframes soft-scale {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.02); }
 }
 
-/* Custom scrollbar for mobile */
-::-webkit-scrollbar {
-  width: 4px;
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
-::-webkit-scrollbar-track {
-  background: hsl(var(--muted));
+/* Responsive Breakpoints - Mobile First */
+@media (min-width: 640px) {
+  :root {
+    --font-size-4xl: 3rem;     /* Larger on tablets */
+  }
 }
 
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--primary));
-  border-radius: 2px;
+@media (min-width: 1024px) {
+  :root {
+    --font-size-4xl: 3.5rem;   /* Even larger on desktop */
+  }
+}
+
+/* Print Styles - Accessibility */
+@media print {
+  .nav-primary,
+  .floating-action,
+  button {
+    display: none !important;
+  }
 }
