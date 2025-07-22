@@ -232,7 +232,7 @@ Human-first minimalism with contextual fluidity
   /* Secondary Actions */
   .action-secondary {
     @apply px-6 py-3 rounded-lg font-medium;
-    @apply bg-surface text-foreground border border-border;
+    @apply bg-background text-foreground border border-border;
     @apply hover:bg-muted hover:border-primary/20;
     @apply transition-all duration-200 ease-out;
     min-height: var(--touch-target-min);
