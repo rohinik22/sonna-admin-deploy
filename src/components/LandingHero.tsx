@@ -1,7 +1,7 @@
 
 import React from "react";
 import { Button } from "@/components/ui/button";
-import { Sparkles } from "lucide-react";
+import { Sparkles, UtensilsCrossed } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export const LandingHero = () => {
@@ -35,6 +35,7 @@ export const LandingHero = () => {
           className="w-full action-secondary"
           onClick={() => navigate('/menu')}
         >
+          <UtensilsCrossed className="w-5 h-5 mr-2" />
           Browse Full Menu
         </Button>
         

@@ -4,11 +4,14 @@ import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
 import { FloatingCart } from "@/components/FloatingCart";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { FoodCard } from "@/components/FoodCard";
 import { menuData } from "@/data/menuData";
-import { Search as SearchIcon } from "lucide-react";
+import { Search as SearchIcon, UtensilsCrossed } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Search = () => {
+  const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
   
   // Flatten all menu items for search
@@ -52,9 +55,17 @@ const Search = () => {
           <div className="text-center py-12">
             <SearchIcon className="w-16 h-16 text-muted-foreground mx-auto mb-4" />
             <h2 className="text-xl font-semibold mb-2">Search Sonna's Menu</h2>
-            <p className="text-muted-foreground">
+            <p className="text-muted-foreground mb-6">
               Find your favorite dishes, drinks, and treats
             </p>
+            <Button 
+              variant="outline" 
+              onClick={() => navigate('/menu')}
+              className="flex items-center gap-2"
+            >
+              <UtensilsCrossed className="w-4 h-4" />
+              Browse Full Menu
+            </Button>
           </div>
         )}
       </div>
