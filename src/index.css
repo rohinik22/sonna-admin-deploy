@@ -268,7 +268,7 @@ Human-first minimalism with contextual fluidity
   }
 
   .nav-item.active {
-    @apply text-primary bg-primary-soft;
+    @apply text-primary bg-primary/10;
   }
 
   .nav-item:active {
