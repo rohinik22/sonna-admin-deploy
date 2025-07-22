@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { FoodCard } from "@/components/FoodCard";
 import { menuData, sonnaRecommends } from "@/data/menuData";
 import { Heart } from "lucide-react";
