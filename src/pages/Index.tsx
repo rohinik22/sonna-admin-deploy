@@ -1,38 +1,39 @@
+
 import { useState } from "react";
 import { Header } from "@/components/Header";
-import { HeroSection } from "@/components/HeroSection";
-import { CategoryNav } from "@/components/CategoryNav";
+import { LandingHero } from "@/components/LandingHero";
+import { SonnaRecommends } from "@/components/SonnaRecommends";
+import { CategoryGrid } from "@/components/CategoryGrid";
 import { MenuSection } from "@/components/MenuSection";
-import { StorySection } from "@/components/StorySection";
 import { FloatingCart } from "@/components/FloatingCart";
 import { BottomNav } from "@/components/BottomNav";
 
 const Index = () => {
-  const [activeCategory, setActiveCategory] = useState("cakes");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
+  // Steve Jobs: "Focus is about saying no to the hundred other good ideas"
+  // Single question interface: What do you want to eat today?
+  
   return (
     <div className="min-h-screen bg-background pb-20">
-      {/* Fixed Header */}
       <Header />
       
-      {/* Hero Section */}
-      <HeroSection />
+      {!activeCategory ? (
+        // Landing state - maximum simplicity
+        <>
+          <LandingHero />
+          <SonnaRecommends onViewCategory={setActiveCategory} />
+          <CategoryGrid onSelectCategory={setActiveCategory} />
+        </>
+      ) : (
+        // Category selected state
+        <MenuSection 
+          categoryId={activeCategory} 
+          onBack={() => setActiveCategory(null)}
+        />
+      )}
       
-      {/* Category Navigation */}
-      <CategoryNav />
-      
-      {/* Menu Content */}
-      <main className="pb-6">
-        <MenuSection categoryId={activeCategory} />
-        
-        {/* Story Section */}
-        <StorySection />
-      </main>
-      
-      {/* Floating Cart */}
       <FloatingCart />
-      
-      {/* Bottom Navigation */}
       <BottomNav />
     </div>
   );

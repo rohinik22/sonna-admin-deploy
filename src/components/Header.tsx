@@ -1,17 +1,32 @@
-import { ShoppingCart, Star, Heart } from "lucide-react";
+
+import { ShoppingCart, Star, Heart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 
-export const Header = () => {
+interface HeaderProps {
+  showBack?: boolean;
+  onBack?: () => void;
+  title?: string;
+}
+
+export const Header = ({ showBack, onBack, title }: HeaderProps) => {
   return (
-    <header className="sticky top-0 z-50 bg-card border-b border-border shadow-card">
+    <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-sm">
       <div className="flex items-center justify-between p-4">
-        {/* Logo & Location */}
-        <div className="flex-1">
-          <h1 className="text-xl font-bold gradient-warm bg-clip-text text-transparent">
-            Somas
-          </h1>
-          <p className="text-xs text-muted-foreground">Delivering Love</p>
+        {/* Left side */}
+        <div className="flex items-center gap-3 flex-1">
+          {showBack ? (
+            <Button variant="ghost" size="icon" onClick={onBack} className="touch-target">
+              <ArrowLeft className="w-5 h-5" />
+            </Button>
+          ) : null}
+          
+          <div>
+            <h1 className="text-xl font-bold gradient-warm bg-clip-text text-transparent">
+              {title || "Sonna's"}
+            </h1>
+            <p className="text-xs text-muted-foreground">Made with Love ❤️</p>
+          </div>
         </div>
         
         {/* Loyalty Points */}
@@ -24,7 +39,7 @@ export const Header = () => {
           </div>
         </div>
         
-        {/* Cart & Profile */}
+        {/* Right side */}
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="relative touch-target">
             <Heart className="w-5 h-5" />
