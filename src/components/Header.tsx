@@ -2,6 +2,7 @@
 import { ShoppingCart, Star, Heart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { useNavigate } from "react-router-dom";
 
 interface HeaderProps {
   showBack?: boolean;
@@ -10,8 +11,29 @@ interface HeaderProps {
 }
 
 export const Header = ({ showBack, onBack, title }: HeaderProps) => {
+  const navigate = useNavigate();
+
+  const handleLogoClick = () => {
+    navigate('/');
+  };
+
+  const handleLoyaltyClick = () => {
+    // TODO: Navigate to loyalty points page or show modal
+    console.log('Show loyalty points details');
+  };
+
+  const handleWishlistClick = () => {
+    // TODO: Navigate to wishlist page
+    console.log('Navigate to wishlist');
+  };
+
+  const handleCartClick = () => {
+    // TODO: Navigate to cart page
+    console.log('Navigate to cart');
+  };
+
   return (
-    <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-sm border-b border-border shadow-sm">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
       <div className="flex items-center justify-between p-4">
         {/* Left side */}
         <div className="flex items-center gap-3 flex-1">
@@ -21,30 +43,41 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
             </Button>
           ) : null}
           
-          <div>
-            <h1 className="text-xl font-bold gradient-warm bg-clip-text text-transparent">
-              {title || "Sonna's"}
-            </h1>
-            <p className="text-xs text-muted-foreground">Made with Love ❤️</p>
-          </div>
+          <button onClick={handleLogoClick} className="flex items-start gap-2">
+            <div>
+              <h1 className="text-xl font-bold text-primary">
+                {title || "Sonna's"}
+              </h1>
+              <p className="text-xs text-muted-foreground -mt-1">Made with Love ❤️</p>
+            </div>
+          </button>
         </div>
         
         {/* Loyalty Points */}
-        <div className="flex items-center gap-2 mx-4">
-          <div className="loyalty-shimmer px-3 py-1 rounded-full">
-            <div className="flex items-center gap-1">
-              <Star className="w-3 h-3" />
-              <span className="text-xs font-medium">1,250 pts</span>
-            </div>
-          </div>
-        </div>
+        <button 
+          onClick={handleLoyaltyClick}
+          className="flex items-center gap-2 mx-4 px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+        >
+          <Star className="w-3 h-3 text-primary fill-current" />
+          <span className="text-xs font-medium text-primary">1,250 pts</span>
+        </button>
         
         {/* Right side */}
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="relative touch-target">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="relative touch-target"
+            onClick={handleWishlistClick}
+          >
             <Heart className="w-5 h-5" />
           </Button>
-          <Button variant="ghost" size="icon" className="relative touch-target">
+          <Button 
+            variant="ghost" 
+            size="icon" 
+            className="relative touch-target"
+            onClick={handleCartClick}
+          >
             <ShoppingCart className="w-5 h-5" />
             <Badge 
               variant="destructive" 
