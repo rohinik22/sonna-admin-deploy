@@ -18,8 +18,7 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
   };
 
   const handleLoyaltyClick = () => {
-    // TODO: Navigate to loyalty points page or show modal
-    console.log('Show loyalty points details');
+    navigate('/profile');
   };
 
   const handleWishlistClick = () => {
@@ -43,7 +42,10 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
             </Button>
           ) : null}
           
-          <button onClick={handleLogoClick} className="flex items-start gap-2">
+          <button 
+            onClick={handleLogoClick} 
+            className="flex items-start gap-2 transition-transform duration-200 hover:scale-105"
+          >
             <div>
               <h1 className="text-xl font-bold text-primary">
                 {title || "Sonna's"}
@@ -56,7 +58,7 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
         {/* Loyalty Points */}
         <button 
           onClick={handleLoyaltyClick}
-          className="flex items-center gap-2 mx-4 px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-colors"
+          className="flex items-center gap-2 mx-4 px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-all duration-200 hover:scale-105"
         >
           <Star className="w-3 h-3 text-primary fill-current" />
           <span className="text-xs font-medium text-primary">1,250 pts</span>
@@ -67,7 +69,7 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="relative touch-target"
+            className="relative touch-target transition-transform duration-200 hover:scale-105"
             onClick={handleWishlistClick}
           >
             <Heart className="w-5 h-5" />
@@ -75,13 +77,13 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
           <Button 
             variant="ghost" 
             size="icon" 
-            className="relative touch-target"
+            className="relative touch-target transition-transform duration-200 hover:scale-105"
             onClick={handleCartClick}
           >
             <ShoppingCart className="w-5 h-5" />
             <Badge 
               variant="destructive" 
-              className="absolute -top-1 -right-1 w-5 h-5 text-xs rounded-full p-0 flex items-center justify-center"
+              className="absolute -top-1 -right-1 w-5 h-5 text-xs rounded-full p-0 flex items-center justify-center animate-pulse"
             >
               3
             </Badge>

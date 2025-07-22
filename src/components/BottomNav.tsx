@@ -1,12 +1,12 @@
 
-import { Home, Search, ShoppingBag, User, UtensilsCrossed } from "lucide-react";
+import { Home, Search, ShoppingBag, User, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useNavigate, useLocation } from "react-router-dom";
 
 const navItems = [
   { icon: Home, label: "Home", id: "home", path: "/" },
   { icon: Search, label: "Search", id: "search", path: "/search" },
-  { icon: UtensilsCrossed, label: "Menu", id: "menu", path: "/menu" },
+  { icon: Calendar, label: "Pre-book", id: "prebook", path: "/prebook" },
   { icon: ShoppingBag, label: "Orders", id: "orders", path: "/orders" },
   { icon: User, label: "Profile", id: "profile", path: "/profile" }
 ];
@@ -27,7 +27,7 @@ export const BottomNav = () => {
               key={item.id}
               onClick={() => navigate(item.path)}
               className={cn(
-                "nav-item haptic-light",
+                "nav-item haptic-light transition-all duration-200 hover:scale-105",
                 isActive && "active"
               )}
               aria-label={`Navigate to ${item.label}`}
