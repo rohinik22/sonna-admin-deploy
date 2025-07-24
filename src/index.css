@@ -320,7 +320,7 @@ Human-first minimalism with contextual fluidity
 
   /* Food Card - Mobile First */
   .food-card {
-    @apply bg-surface rounded-xl p-5 border border-border;
+    @apply bg-card rounded-xl p-5 border border-border;
     @apply shadow-sm hover:shadow-lg;
     @apply transition-all duration-200 ease-out;
     @apply space-y-4;
