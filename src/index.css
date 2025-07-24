@@ -295,6 +295,29 @@ Human-first minimalism with contextual fluidity
     @apply bg-error-soft text-error border border-error/20;
   }
 
+  /* Tempting Gradients for Food App */
+  .gradient-appetizing {
+    background: linear-gradient(135deg, 
+      hsl(var(--primary)) 0%, 
+      hsl(var(--primary-emphasis)) 50%,
+      hsl(var(--warning)) 100%
+    );
+  }
+
+  .gradient-warm {
+    background: linear-gradient(135deg, 
+      hsl(var(--warning)) 0%, 
+      hsl(var(--primary)) 100%
+    );
+  }
+
+  .gradient-seasonal {
+    background: linear-gradient(135deg, 
+      hsl(var(--warning) / 0.1) 0%, 
+      hsl(var(--primary) / 0.1) 100%
+    );
+  }
+
   /* Floating Elements */
   .floating-action {
     @apply fixed bottom-20 left-4 right-4 z-40;
@@ -302,6 +325,26 @@ Human-first minimalism with contextual fluidity
     @apply shadow-xl backdrop-blur-sm;
     @apply transition-all duration-200 ease-out;
     min-height: var(--touch-target-comfortable);
+  }
+
+  /* Signature Item Highlights */
+  .signature-highlight {
+    @apply relative overflow-hidden rounded-xl p-1;
+    background: linear-gradient(135deg, 
+      hsl(var(--primary)) 0%, 
+      hsl(var(--warning)) 50%,
+      hsl(var(--primary-emphasis)) 100%
+    );
+  }
+
+  .signature-highlight::before {
+    content: '';
+    @apply absolute inset-0 opacity-75;
+    background: linear-gradient(135deg, 
+      transparent 0%, 
+      hsl(var(--background) / 0.1) 50%,
+      transparent 100%
+    );
   }
 
   /* Loading States - Ethical Feedback */
@@ -440,6 +483,27 @@ Human-first minimalism with contextual fluidity
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+@keyframes appetite-pulse {
+  0%, 100% { 
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% { 
+    transform: scale(1.02);
+    filter: brightness(1.05);
+  }
+}
+
+@keyframes signature-glow {
+  0%, 100% { box-shadow: 0 0 20px hsl(var(--primary) / 0.3); }
+  50% { box-shadow: 0 0 30px hsl(var(--primary) / 0.5); }
+}
+
+@keyframes seasonal-shimmer {
+  0% { background-position: -200px 0; }
+  100% { background-position: 200px 0; }
 }
 
 /* Responsive Breakpoints - Mobile First */

@@ -95,11 +95,27 @@ export default {
 					to: {
 						height: '0'
 					}
+				},
+				'appetite-pulse': {
+					'0%, 100%': { 
+						transform: 'scale(1)',
+						filter: 'brightness(1)'
+					},
+					'50%': { 
+						transform: 'scale(1.02)',
+						filter: 'brightness(1.05)'
+					}
+				},
+				'signature-glow': {
+					'0%, 100%': { 'box-shadow': '0 0 20px hsl(var(--primary) / 0.3)' },
+					'50%': { 'box-shadow': '0 0 30px hsl(var(--primary) / 0.5)' }
 				}
 			},
 			animation: {
 				'accordion-down': 'accordion-down 0.2s ease-out',
-				'accordion-up': 'accordion-up 0.2s ease-out'
+				'accordion-up': 'accordion-up 0.2s ease-out',
+				'appetite-pulse': 'appetite-pulse 2s ease-in-out infinite',
+				'signature-glow': 'signature-glow 3s ease-in-out infinite'
 			}
 		}
 	},
