@@ -59,10 +59,10 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
           </button>
         </div>
         
-        {/* Loyalty Points */}
+        {/* Loyalty Points - Centered and visible on all screens */}
         <button 
           onClick={handleLoyaltyClick}
-          className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 hover:bg-primary/20 transition-colors"
+          className="flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 hover:bg-primary/20 transition-colors"
         >
           <Star className="w-3 h-3 text-primary fill-current" />
           <span className="text-xs font-medium text-primary">1,250</span>
