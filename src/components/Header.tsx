@@ -1,11 +1,10 @@
 
-import { ShoppingCart, Star, Heart, ArrowLeft, ChefHat } from "lucide-react";
+import { ShoppingCart, Star, Heart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
-import sonnaLogo from "@/assets/sonna-logo.jpg";
 
 interface HeaderProps {
   showBack?: boolean;
@@ -35,36 +34,27 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border shadow-sm">
-      <div className="flex items-center justify-between p-4">
+    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
+      <div className="flex items-center justify-between px-4 py-3">
         {/* Left side */}
-        <div className="flex items-center gap-3 flex-1">
-          {showBack ? (
-            <Button variant="ghost" size="icon" onClick={onBack} className="touch-target">
-              <ArrowLeft className="w-5 h-5" />
+        <div className="flex items-center gap-2 flex-1">
+          {showBack && (
+            <Button variant="ghost" size="sm" onClick={onBack}>
+              <ArrowLeft className="w-4 h-4" />
             </Button>
-          ) : null}
+          )}
           
           <button 
             onClick={handleLogoClick} 
-            className="flex items-center gap-3 transition-all duration-300 hover:scale-105 group"
+            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
           >
-            <div className="relative w-10 h-10 rounded-full overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow duration-300">
-              <img 
-                src={sonnaLogo} 
-                alt="Sonna's Kitchen Logo" 
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
+              <span className="text-lg font-bold text-primary">S</span>
             </div>
-            <div>
-              <h1 className="text-xl font-bold text-primary font-playfair group-hover:text-primary-emphasis transition-colors duration-300">
-                {title || "Sonna's"}
+            <div className="hidden sm:block">
+              <h1 className="text-lg font-semibold text-foreground">
+                {title || "Sonna's Kitchen"}
               </h1>
-              <p className="text-xs text-muted-foreground -mt-1 font-dancing flex items-center gap-1">
-                <ChefHat className="w-3 h-3" />
-                Made with Love ❤️
-              </p>
             </div>
           </button>
         </div>
@@ -72,36 +62,36 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
         {/* Loyalty Points */}
         <button 
           onClick={handleLoyaltyClick}
-          className="flex items-center gap-2 mx-4 px-3 py-1 rounded-full bg-primary/10 hover:bg-primary/20 transition-all duration-200 hover:scale-105"
+          className="hidden sm:flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 hover:bg-primary/20 transition-colors"
         >
           <Star className="w-3 h-3 text-primary fill-current" />
-          <span className="text-xs font-medium text-primary font-poppins">1,250 pts</span>
+          <span className="text-xs font-medium text-primary">1,250</span>
         </button>
         
         {/* Right side */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1">
           <Button 
             variant="ghost" 
-            size="icon" 
-            className="relative touch-target transition-transform duration-200 hover:scale-105"
+            size="sm" 
+            className="relative"
             onClick={handleWishlistClick}
           >
-            <Heart className="w-5 h-5" />
+            <Heart className="w-4 h-4" />
             {wishlistItems.length > 0 && (
-              <Badge className="absolute -top-1 -right-1 w-5 h-5 text-xs bg-red-500 text-white rounded-full p-0 flex items-center justify-center">
+              <Badge className="absolute -top-1 -right-1 w-4 h-4 text-xs bg-red-500 text-white rounded-full p-0 flex items-center justify-center min-w-0">
                 {wishlistItems.length}
               </Badge>
             )}
           </Button>
           <Button 
             variant="ghost" 
-            size="icon" 
-            className="relative touch-target transition-transform duration-200 hover:scale-105"
+            size="sm" 
+            className="relative"
             onClick={handleCartClick}
           >
-            <ShoppingCart className="w-5 h-5" />
+            <ShoppingCart className="w-4 h-4" />
             {cart.itemCount > 0 && (
-              <Badge className="absolute -top-1 -right-1 w-5 h-5 text-xs bg-primary text-primary-foreground rounded-full p-0 flex items-center justify-center">
+              <Badge className="absolute -top-1 -right-1 w-4 h-4 text-xs bg-primary text-primary-foreground rounded-full p-0 flex items-center justify-center min-w-0">
                 {cart.itemCount}
               </Badge>
             )}
