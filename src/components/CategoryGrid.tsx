@@ -10,6 +10,10 @@ import pizzaImage from "@/assets/pizza-category.jpg";
 import pastaImage from "@/assets/pasta-category.jpg";
 import coldDrinksImage from "@/assets/cold-drinks-category.jpg";
 import hotDrinksImage from "@/assets/hot-drinks-category.jpg";
+import soupsAppetizersImage from "@/assets/soups-appetizers-category.jpg";
+import houseSpecialsImage from "@/assets/house-specials-category.jpg";
+import sandwichesImage from "@/assets/sandwiches-category.jpg";
+import burgersImage from "@/assets/burgers-category.jpg";
 
 interface CategoryGridProps {
   onSelectCategory: (categoryId: string) => void;
@@ -22,6 +26,10 @@ const categoryImages: Record<string, string> = {
   "pasta": pastaImage,
   "cold-drinks": coldDrinksImage,
   "hot-drinks": hotDrinksImage,
+  "soups-appetizers": soupsAppetizersImage,
+  "house-specials": houseSpecialsImage,
+  "sandwiches": sandwichesImage,
+  "burgers": burgersImage,
 };
 
 export const CategoryGrid = ({ onSelectCategory }: CategoryGridProps) => {
@@ -44,32 +52,21 @@ export const CategoryGrid = ({ onSelectCategory }: CategoryGridProps) => {
             className="group relative overflow-hidden rounded-xl bg-card cursor-pointer transform transition-all duration-300 hover:scale-105 hover:shadow-xl"
           >
             {/* Background Image */}
-            <div className="relative h-32 overflow-hidden">
-              {categoryImages[category.id] ? (
-                <img 
-                  src={categoryImages[category.id]} 
-                  alt={category.name}
-                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
-                />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-primary/20 to-primary/40 flex items-center justify-center">
-                  <span className="text-6xl">{category.emoji}</span>
-                </div>
-              )}
+            <div className="relative h-40 overflow-hidden">
+              <img 
+                src={categoryImages[category.id]} 
+                alt={category.name}
+                className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-110"
+              />
               
-              {/* Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent" />
+              {/* Overlay for text readability */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
               
-              {/* Content */}
-              <div className="absolute bottom-3 left-3 right-3 text-white">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="text-xl">{category.emoji}</span>
-                  <h3 className="font-bold text-lg font-playfair">{category.name}</h3>
-                </div>
-                <p className="text-xs opacity-90 font-poppins mb-1">{category.description}</p>
-                <span className="text-xs bg-white/20 backdrop-blur-sm px-2 py-1 rounded-full font-poppins">
-                  {category.items.length} delicious items
-                </span>
+              {/* Category Name Only */}
+              <div className="absolute bottom-4 left-4 right-4">
+                <h3 className="font-bold text-xl text-white font-playfair drop-shadow-lg">
+                  {category.name}
+                </h3>
               </div>
             </div>
           </div>
