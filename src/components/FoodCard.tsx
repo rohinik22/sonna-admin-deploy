@@ -7,6 +7,8 @@ import { MenuItem } from "@/data/menuData";
 import { NutritionalInfo } from "@/components/NutritionalInfo";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { LazyImage } from "@/components/mobile/LazyImage";
+import { HapticButton } from "@/components/mobile/HapticButton";
 import {
   Collapsible,
   CollapsibleContent,
@@ -92,21 +94,27 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
       </div>
 
       {/* Wishlist Button */}
-      <Button
+      <HapticButton
         variant="ghost"
         size="icon"
         className="absolute top-3 right-3 z-10 w-8 h-8 bg-white/80 hover:bg-white"
         onClick={handleWishlistToggle}
+        hapticType="selection"
       >
         <Heart 
           className={`w-4 h-4 ${isInWishlist(item.id) ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} 
         />
-      </Button>
+      </HapticButton>
 
       {/* Food Image */}
       <div className="relative h-48 bg-muted rounded-xl mb-4 overflow-hidden">
         {item.image ? (
-          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+          <LazyImage 
+            src={item.image} 
+            alt={item.name} 
+            className="w-full h-full object-cover" 
+            priority={showRecommendedBadge}
+          />
         ) : (
           <div className="flex items-center justify-center h-full text-5xl">
             🍽️
@@ -195,31 +203,34 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
           
           {/* Add to Cart - Mobile Optimized */}
           {quantity === 0 ? (
-            <Button 
+            <HapticButton 
               onClick={handleAddToCart}
               className="quick-add bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 text-base font-semibold font-poppins touch-comfortable"
+              hapticType="medium"
             >
               <Plus className="w-5 h-5 mr-2" />
               Add
-            </Button>
+            </HapticButton>
           ) : (
             <div className="flex items-center gap-4 bg-muted/50 rounded-full p-2">
-              <Button 
+              <HapticButton 
                 onClick={handleDecrement}
                 size="sm" 
                 variant="ghost"
                 className="w-10 h-10 p-0 rounded-full touch-target"
+                hapticType="light"
               >
                 <Minus className="w-4 h-4" />
-              </Button>
+              </HapticButton>
               <span className="font-bold min-w-[3rem] text-center text-lg font-poppins">{quantity}</span>
-              <Button 
+              <HapticButton 
                 onClick={handleIncrement}
                 size="sm"
                 className="w-10 h-10 p-0 rounded-full bg-primary text-primary-foreground touch-target"
+                hapticType="light"
               >
                 <Plus className="w-4 h-4" />
-              </Button>
+              </HapticButton>
             </div>
           )}
         </div>
