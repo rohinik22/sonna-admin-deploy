@@ -1,10 +1,11 @@
 
-import { ShoppingCart, Star, Heart, ArrowLeft } from "lucide-react";
+import { ShoppingCart, Star, Heart, ArrowLeft, ChefHat } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import sonnaLogo from "@/assets/sonna-logo.jpg";
 
 interface HeaderProps {
   showBack?: boolean;
@@ -46,13 +47,22 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
           
           <button 
             onClick={handleLogoClick} 
-            className="flex items-start gap-2 transition-transform duration-200 hover:scale-105"
+            className="flex items-center gap-3 transition-all duration-300 hover:scale-105 group"
           >
+            <div className="relative w-10 h-10 rounded-full overflow-hidden shadow-lg group-hover:shadow-xl transition-shadow duration-300">
+              <img 
+                src={sonnaLogo} 
+                alt="Sonna's Kitchen Logo" 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+            </div>
             <div>
-              <h1 className="text-xl font-bold text-primary font-playfair">
+              <h1 className="text-xl font-bold text-primary font-playfair group-hover:text-primary-emphasis transition-colors duration-300">
                 {title || "Sonna's"}
               </h1>
-              <p className="text-xs text-muted-foreground -mt-1 font-dancing">
+              <p className="text-xs text-muted-foreground -mt-1 font-dancing flex items-center gap-1">
+                <ChefHat className="w-3 h-3" />
                 Made with Love ❤️
               </p>
             </div>

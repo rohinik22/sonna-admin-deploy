@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Header } from "@/components/Header";
 import { BottomNav } from "@/components/BottomNav";
 import { FloatingCart } from "@/components/FloatingCart";
@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 const Search = () => {
   const navigate = useNavigate();
   const [searchQuery, setSearchQuery] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
   
   // Flatten all menu items for search
   const allItems = menuData.flatMap(category => 
@@ -25,6 +26,18 @@ const Search = () => {
     item.categoryName.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
+  // Auto-focus search input on mobile
+  useEffect(() => {
+    // Check if device is mobile/tablet
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile && inputRef.current) {
+      // Small delay to ensure page is loaded
+      setTimeout(() => {
+        inputRef.current?.focus();
+      }, 300);
+    }
+  }, []);
+
   return (
     <div className="min-h-screen bg-background pb-20">
       <Header title="Search" />
@@ -33,10 +46,15 @@ const Search = () => {
         <div className="relative">
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-4 h-4" />
           <Input
+            ref={inputRef}
             placeholder="Search for food, drinks, or categories..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="pl-10 h-12"
+            className="pl-10 h-12 text-base"
+            type="search"
+            autoComplete="off"
+            autoCapitalize="none"
+            spellCheck="false"
           />
         </div>
         
