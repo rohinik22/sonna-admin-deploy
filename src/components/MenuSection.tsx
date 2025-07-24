@@ -37,7 +37,7 @@ export const MenuSection = ({ categoryId, onBack }: MenuSectionProps) => {
           </p>
         </div>
         
-        <div className="grid gap-6">
+        <div className="space-y-6">
           {category.items.map((item) => (
             <FoodCard key={item.id} item={item} />
           ))}

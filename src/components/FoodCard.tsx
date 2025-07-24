@@ -69,7 +69,7 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
   };
 
   return (
-    <div className="food-card relative overflow-hidden">
+    <div className="food-card relative overflow-hidden mb-6">
       {/* Badges */}
       <div className="absolute top-3 left-3 z-10 flex gap-2">
         {showRecommendedBadge && (
@@ -104,7 +104,7 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
       </Button>
 
       {/* Food Image */}
-      <div className="relative h-40 bg-muted rounded-xl mb-4 overflow-hidden">
+      <div className="relative h-48 bg-muted rounded-xl mb-4 overflow-hidden">
         {item.image ? (
           <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
         ) : (
@@ -193,32 +193,32 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
             </div>
           </div>
           
-          {/* Add to Cart */}
+          {/* Add to Cart - Mobile Optimized */}
           {quantity === 0 ? (
             <Button 
               onClick={handleAddToCart}
-              className="quick-add bg-primary text-primary-foreground hover:bg-primary/90 px-6 font-poppins"
+              className="quick-add bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 text-base font-semibold font-poppins touch-comfortable"
             >
-              <Plus className="w-4 h-4 mr-2" />
+              <Plus className="w-5 h-5 mr-2" />
               Add
             </Button>
           ) : (
-            <div className="flex items-center gap-3 bg-muted/50 rounded-full p-1">
+            <div className="flex items-center gap-4 bg-muted/50 rounded-full p-2">
               <Button 
                 onClick={handleDecrement}
                 size="sm" 
                 variant="ghost"
-                className="w-8 h-8 p-0 rounded-full"
+                className="w-10 h-10 p-0 rounded-full touch-target"
               >
-                <Minus className="w-3 h-3" />
+                <Minus className="w-4 h-4" />
               </Button>
-              <span className="font-bold min-w-[2rem] text-center font-poppins">{quantity}</span>
+              <span className="font-bold min-w-[3rem] text-center text-lg font-poppins">{quantity}</span>
               <Button 
                 onClick={handleIncrement}
                 size="sm"
-                className="w-8 h-8 p-0 rounded-full bg-primary text-primary-foreground"
+                className="w-10 h-10 p-0 rounded-full bg-primary text-primary-foreground touch-target"
               >
-                <Plus className="w-3 h-3" />
+                <Plus className="w-4 h-4" />
               </Button>
             </div>
           )}

@@ -9,14 +9,19 @@ import { Input } from "@/components/ui/input";
 import { Search as SearchIcon } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { FeaturedCarousel } from "@/components/FeaturedCarousel";
+import { useCart } from "@/contexts/CartContext";
 
 const Menu = () => {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const { state: cart } = useCart();
+
+  // Dynamic bottom padding to prevent cart obstruction
+  const dynamicPaddingClass = cart.itemCount > 0 ? "pb-40" : "pb-20";
 
   return (
-    <div className="min-h-screen bg-background pb-20">
+    <div className={`min-h-screen bg-background ${dynamicPaddingClass}`}>
       {!activeCategory ? (
         <>
           <Header 
