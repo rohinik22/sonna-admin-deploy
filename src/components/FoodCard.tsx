@@ -155,13 +155,42 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
 
         {/* Pricing */}
         <div className="flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-xl text-primary font-poppins">₹{item.price}</span>
-            {item.originalPrice && (
-              <span className="text-sm text-muted-foreground line-through font-poppins">
-                ₹{item.originalPrice}
-              </span>
+          <div className="flex flex-col">
+            {item.halfKgPrice && item.fullKgPrice ? (
+              <div className="space-y-1">
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-lg text-primary font-poppins">₹{item.halfKgPrice}</span>
+                  <span className="text-xs bg-muted px-2 py-1 rounded-full font-poppins">½kg</span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="font-semibold text-sm text-muted-foreground font-poppins">₹{item.fullKgPrice}</span>
+                  <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded-full font-poppins">1kg • Save ₹{(item.halfKgPrice * 2) - item.fullKgPrice}</span>
+                </div>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-xl text-primary font-poppins">₹{item.price}</span>
+                {item.originalPrice && (
+                  <span className="text-sm text-muted-foreground line-through font-poppins">
+                    ₹{item.originalPrice}
+                  </span>
+                )}
+              </div>
             )}
+            
+            {/* Best seller or signature indicators with pricing */}
+            <div className="flex items-center gap-2 mt-1">
+              {item.isBestSeller && (
+                <span className="text-xs bg-accent/20 text-accent px-2 py-1 rounded-full font-poppins">
+                  🔥 Bestseller
+                </span>
+              )}
+              {item.prepTime && (
+                <span className="text-xs text-muted-foreground font-poppins">
+                  ⏱️ {item.prepTime}
+                </span>
+              )}
+            </div>
           </div>
           
           {/* Add to Cart */}
