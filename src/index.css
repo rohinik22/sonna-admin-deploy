@@ -238,6 +238,78 @@ Human-first minimalism with contextual fluidity
     box-shadow: var(--shadow-xl);
   }
 
+  /* Glassmorphism effects */
+  .glass-card {
+    background: var(--glass-background);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .glass-dark {
+    background: var(--glass-dark);
+    border: 1px solid var(--glass-dark-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Floating Action Button */
+  .fab {
+    @apply fixed z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95;
+    background: var(--gradient-aurora);
+    bottom: calc(var(--mobile-nav-height) + 16px);
+    right: 16px;
+  }
+
+  /* Enhanced category cards */
+  .category-card {
+    @apply relative overflow-hidden rounded-2xl cursor-pointer transform transition-all duration-500;
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--accent) / 0.1));
+  }
+
+  .category-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  /* Advanced hover effects */
+  .hover-glow {
+    @apply relative transition-all duration-300;
+  }
+
+  .hover-glow:hover::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: var(--gradient-glow);
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0.7;
+  }
+
+  /* Slide animations */
+  .slide-enter {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  .slide-enter-active {
+    transform: translateX(0);
+    opacity: 1;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  .slide-exit {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .slide-exit-active {
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
   /* Secondary Actions */
   .action-secondary {
     @apply px-6 py-3 rounded-lg font-medium;

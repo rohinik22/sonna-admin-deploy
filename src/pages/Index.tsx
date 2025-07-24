@@ -5,8 +5,13 @@ import { FloatingCart } from "@/components/FloatingCart";
 import { BottomNav } from "@/components/BottomNav";
 import { SwipeNavigation } from "@/components/mobile/SwipeNavigation";
 import { PullToRefresh } from "@/components/mobile/PullToRefresh";
+import { FloatingActionButton } from "@/components/mobile/FloatingActionButton";
+import { Plus } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const Index = () => {
+  const navigate = useNavigate();
+  
   const handleRefresh = async () => {
     // Simulate refresh - reload page data
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -23,6 +28,11 @@ const Index = () => {
           <Header />
           <LandingHero />
           <FloatingCart />
+          
+          <FloatingActionButton onClick={() => navigate('/cart')}>
+            <Plus className="w-6 h-6" />
+          </FloatingActionButton>
+          
           <BottomNav />
         </div>
       </PullToRefresh>
