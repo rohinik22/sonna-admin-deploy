@@ -1,73 +1,157 @@
-# Welcome to your Lovable project
+# Sonna Restaurant App 🍕
 
-## Project info
+A modern food delivery and restaurant ordering application built with React, TypeScript, and Tailwind CSS.
 
-**URL**: https://lovable.dev/projects/cab8efce-ac5b-464e-b629-c5e24195ecb3
+## 🚀 Features
 
-## How can I edit this code?
+### 🍽️ Menu & Ordering
+- **Interactive Menu**: Browse through categorized food items with detailed descriptions
+- **Smart Search**: Find your favorite dishes quickly with real-time search
+- **Shopping Cart**: Add items, customize orders, and manage quantities
+- **Wishlist**: Save favorite items for later ordering
 
-There are several ways of editing your application.
+### 👤 User Experience
+- **Loyalty Points**: Earn and track rewards with every order
+- **Pre-booking System**: Schedule orders in advance
+  - Birthday cake pre-orders with customization
+  - Regular meal scheduling for future dates
+- **Order History**: Track past and current orders
+- **User Profile**: Manage personal information, addresses, and preferences
 
-**Use Lovable**
+### 📱 Mobile-First Design
+- Responsive design optimized for mobile devices
+- Bottom navigation for easy thumb navigation
+- Floating cart for quick access
+- Touch-friendly interface
 
-Simply visit the [Lovable Project](https://lovable.dev/projects/cab8efce-ac5b-464e-b629-c5e24195ecb3) and start prompting.
+## 🛠️ Tech Stack
 
-Changes made via Lovable will be committed automatically to this repo.
+- **Frontend**: React 18 with TypeScript
+- **Styling**: Tailwind CSS with custom design system
+- **UI Components**: Shadcn/ui component library
+- **State Management**: React Context API
+- **Routing**: React Router DOM
+- **Build Tool**: Vite
+- **Icons**: Lucide React
+- **Notifications**: Sonner toast notifications
 
-**Use your preferred IDE**
+## 🏃‍♂️ Quick Start
 
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
+### Prerequisites
+- Node.js (v18 or higher)
+- npm or yarn
 
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
+### Installation
 
-Follow these steps:
+1. **Clone the repository**
+   ```bash
+   git clone <YOUR_GIT_URL>
+   cd <YOUR_PROJECT_NAME>
+   ```
 
-```sh
-# Step 1: Clone the repository using the project's Git URL.
-git clone <YOUR_GIT_URL>
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
 
-# Step 3: Install the necessary dependencies.
-npm i
+4. **Open your browser**
+   ```
+   http://localhost:8080
+   ```
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
-npm run dev
+## 📂 Project Structure
+
+```
+src/
+├── components/          # Reusable UI components
+│   ├── ui/             # Shadcn/ui components
+│   ├── Header.tsx      # Main navigation header
+│   ├── BottomNav.tsx   # Mobile bottom navigation
+│   ├── FoodCard.tsx    # Menu item display component
+│   └── ...
+├── pages/              # Route components
+│   ├── Index.tsx       # Home page
+│   ├── Menu.tsx        # Menu browsing
+│   ├── Cart.tsx        # Shopping cart
+│   ├── Profile.tsx     # User profile
+│   ├── PreBook.tsx     # Pre-booking system
+│   └── ...
+├── contexts/           # React Context providers
+│   ├── CartContext.tsx # Shopping cart state
+│   └── WishlistContext.tsx # Wishlist state
+├── data/               # Static data and types
+├── hooks/              # Custom React hooks
+└── lib/                # Utility functions
 ```
 
-**Edit a file directly in GitHub**
+## 🎨 Design System
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The app uses a custom design system built with Tailwind CSS featuring:
+- **HSL Color Palette**: Semantic color tokens for consistent theming
+- **Typography Scale**: Responsive text sizing and hierarchy  
+- **Component Variants**: Flexible UI components with multiple styles
+- **Dark/Light Theme**: Automatic theme switching support
 
-**Use GitHub Codespaces**
+## 📱 Key Pages
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+- **Home** (`/`): Hero section, featured items, and category navigation
+- **Menu** (`/menu`): Full menu browsing with category filters
+- **Search** (`/search`): Real-time food item search
+- **Cart** (`/cart`): Shopping cart management and checkout
+- **Pre-book** (`/prebook`): Schedule future orders and birthday cakes
+- **Profile** (`/profile`): User account and preferences
+- **Orders** (`/orders`): Order history and tracking
+- **Wishlist** (`/wishlist`): Saved favorite items
 
-## What technologies are used for this project?
+## 🚀 Deployment
 
-This project is built with:
+### Lovable Platform
+1. Open your [Lovable project](https://lovable.dev/projects/cab8efce-ac5b-464e-b629-c5e24195ecb3)
+2. Click **Share** → **Publish** to deploy instantly
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+### Custom Hosting
+The app generates standard web assets that can be deployed to any static hosting service:
+- Netlify
+- Vercel  
+- AWS S3 + CloudFront
+- GitHub Pages
 
-## How can I deploy this project?
+```bash
+npm run build  # Generate production build
+```
 
-Simply open [Lovable](https://lovable.dev/projects/cab8efce-ac5b-464e-b629-c5e24195ecb3) and click on Share -> Publish.
+## 🌐 Custom Domain
 
-## Can I connect a custom domain to my Lovable project?
+To connect a custom domain:
+1. Navigate to **Project > Settings > Domains** in Lovable
+2. Click **Connect Domain**
+3. Follow the DNS configuration steps
 
-Yes, you can!
+*Note: Custom domains require a paid Lovable plan*
 
-To connect a domain, navigate to Project > Settings > Domains and click Connect Domain.
+## 🤝 Contributing
 
-Read more here: [Setting up a custom domain](https://docs.lovable.dev/tips-tricks/custom-domain#step-by-step-guide)
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📄 License
+
+This project is built with [Lovable](https://lovable.dev) - The AI-powered web development platform.
+
+## 🔗 Links
+
+- **Live Demo**: [Your deployed app URL]
+- **Lovable Project**: https://lovable.dev/projects/cab8efce-ac5b-464e-b629-c5e24195ecb3
+- **Documentation**: https://docs.lovable.dev/
+
+---
+
+*Built with ❤️ using Lovable*
