@@ -2,6 +2,18 @@
 
 A modern food delivery and restaurant ordering application built with React, TypeScript, and Tailwind CSS.
 
+## 📋 Complete Development Guide
+
+**🎯 [View the Complete Development Guide](./guide.md)** - Essential reading for all contributors!
+
+The comprehensive guide covers:
+- **Design System & Style Guide** - Colors, typography, component patterns
+- **Frontend Architecture** - React patterns, state management, data flow
+- **Backend Integration** - API specs, database schema, real-time features
+- **Admin Dashboard** - Restaurant management interface and workflows
+- **Kitchen Staff Interface** - Order management and kitchen display system
+- **Development Standards** - Code quality, testing, and performance requirements
+
 ## 🚀 Features
 
 ### 🍽️ Menu & Ordering
@@ -143,5 +155,6 @@ To connect a custom domain:
 ## 📄 License
 
 
+Please ...
 
 ---

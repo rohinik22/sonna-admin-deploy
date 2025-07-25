@@ -1,4 +1,8 @@
 
+/*
+ * 🎯 Header Component - The crown of every page
+ * Navigation poetry in motion - Mr. Sweet's touch
+ */
 import { ShoppingCart, Star, Heart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,8 +38,12 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
   };
 
   return (
-    <header className="sticky top-0 z-50 bg-background/95 backdrop-blur-sm border-b border-border">
-      <div className="flex items-center justify-between px-4 py-3">
+    <header 
+      className="sticky top-0 z-50 glass-card border-b border-border/50 transition-all duration-300" 
+      style={{ paddingTop: 'var(--safe-area-inset-top)' }} 
+      data-sweet-header="mr-sweet-navigation"
+    >
+      <div className="flex items-center justify-between px-4 py-3 relative">
         {/* Left side */}
         <div className="flex items-center gap-2 flex-1">
           {showBack && (
@@ -46,10 +54,10 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
           
           <button 
             onClick={handleLogoClick} 
-            className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+            className="flex items-center gap-2 hover:scale-105 transition-all duration-300 group"
           >
-            <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
-              <span className="text-lg font-bold text-primary">S</span>
+            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-primary to-accent flex items-center justify-center shadow-lg group-hover:shadow-primary/25 transition-shadow">
+              <span className="text-lg font-bold text-white">S</span>
             </div>
             <div className="hidden sm:block">
               <h1 className="text-lg font-semibold text-foreground">
@@ -59,13 +67,21 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
           </button>
         </div>
         
-        {/* Loyalty Points - Centered and visible on all screens */}
+        {/* Enhanced Loyalty Points with real-time updates */}
         <button 
           onClick={handleLoyaltyClick}
-          className="flex items-center gap-1 px-2 py-1 rounded-md bg-primary/10 hover:bg-primary/20 transition-colors"
+          className="flex items-center gap-1 px-3 py-1.5 rounded-full glass-card hover:scale-105 transition-all duration-300 relative overflow-hidden group"
         >
-          <Star className="w-3 h-3 text-primary fill-current" />
-          <span className="text-xs font-medium text-primary">1,250</span>
+          <Star className="w-3 h-3 text-primary fill-current animate-pulse" />
+          <span className="text-xs font-medium text-primary relative z-10">
+            {(1250 + (cart.loyaltyPointsEarned || 0)).toLocaleString()}
+          </span>
+          <div className="absolute inset-0 bg-gradient-to-r from-primary/20 to-accent/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+          
+          {/* Points earned indicator */}
+          {cart.loyaltyPointsEarned > 0 && (
+            <div className="absolute -top-1 -right-1 w-2 h-2 bg-green-500 rounded-full animate-bounce" />
+          )}
         </button>
         
         {/* Right side */}

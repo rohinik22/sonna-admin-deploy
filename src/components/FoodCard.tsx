@@ -7,6 +7,9 @@ import { MenuItem } from "@/data/menuData";
 import { NutritionalInfo } from "@/components/NutritionalInfo";
 import { useCart } from "@/contexts/CartContext";
 import { useWishlist } from "@/contexts/WishlistContext";
+import { LazyImage } from "@/components/mobile/LazyImage";
+import { HapticButton } from "@/components/mobile/HapticButton";
+import { ParticleEffect } from "@/components/mobile/ParticleEffect";
 import {
   Collapsible,
   CollapsibleContent,
@@ -21,6 +24,7 @@ interface FoodCardProps {
 export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
   const [showDetails, setShowDetails] = useState(false);
   const [selectedCustomizations, setSelectedCustomizations] = useState<string[]>([]);
+  const [showParticles, setShowParticles] = useState(false);
   
   const { state: cart, addItem, updateQuantity } = useCart();
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
@@ -34,6 +38,8 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
 
   const handleAddToCart = () => {
     addItem(item, selectedCustomizations);
+    setShowParticles(true);
+    setTimeout(() => setShowParticles(false), 1000);
   };
 
   const handleIncrement = () => {
@@ -69,7 +75,10 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
   };
 
   return (
-    <div className="food-card relative overflow-hidden mb-6">
+    <div className="food-card relative overflow-hidden mb-6 glass-card rounded-xl p-4 hover:shadow-xl transition-all duration-500 group">
+      {/* Particle effect */}
+      <ParticleEffect trigger={showParticles} className="z-20" />
+      
       {/* Badges */}
       <div className="absolute top-3 left-3 z-10 flex gap-2">
         {showRecommendedBadge && (
@@ -92,26 +101,35 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
       </div>
 
       {/* Wishlist Button */}
-      <Button
+      <HapticButton
         variant="ghost"
         size="icon"
         className="absolute top-3 right-3 z-10 w-8 h-8 bg-white/80 hover:bg-white"
         onClick={handleWishlistToggle}
+        hapticType="selection"
       >
         <Heart 
           className={`w-4 h-4 ${isInWishlist(item.id) ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} 
         />
-      </Button>
+      </HapticButton>
 
-      {/* Food Image */}
-      <div className="relative h-48 bg-muted rounded-xl mb-4 overflow-hidden">
+      {/* Food Image with enhanced effects */}
+      <div className="relative h-48 bg-muted rounded-xl mb-4 overflow-hidden group-hover:shadow-lg transition-shadow duration-300">
         {item.image ? (
-          <img src={item.image} alt={item.name} className="w-full h-full object-cover" />
+          <LazyImage 
+            src={item.image} 
+            alt={item.name} 
+            className="w-full h-full object-cover transition-all duration-700 group-hover:scale-110 group-hover:brightness-110" 
+            priority={showRecommendedBadge}
+          />
         ) : (
           <div className="flex items-center justify-center h-full text-5xl">
             🍽️
           </div>
         )}
+        
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         
         {/* 100% Veg Indicator */}
         <div className="absolute bottom-3 left-3">
@@ -195,31 +213,34 @@ export const FoodCard = ({ item, showRecommendedBadge }: FoodCardProps) => {
           
           {/* Add to Cart - Mobile Optimized */}
           {quantity === 0 ? (
-            <Button 
+            <HapticButton 
               onClick={handleAddToCart}
               className="quick-add bg-primary text-primary-foreground hover:bg-primary/90 px-8 py-3 text-base font-semibold font-poppins touch-comfortable"
+              hapticType="medium"
             >
               <Plus className="w-5 h-5 mr-2" />
               Add
-            </Button>
+            </HapticButton>
           ) : (
             <div className="flex items-center gap-4 bg-muted/50 rounded-full p-2">
-              <Button 
+              <HapticButton 
                 onClick={handleDecrement}
                 size="sm" 
                 variant="ghost"
                 className="w-10 h-10 p-0 rounded-full touch-target"
+                hapticType="light"
               >
                 <Minus className="w-4 h-4" />
-              </Button>
+              </HapticButton>
               <span className="font-bold min-w-[3rem] text-center text-lg font-poppins">{quantity}</span>
-              <Button 
+              <HapticButton 
                 onClick={handleIncrement}
                 size="sm"
                 className="w-10 h-10 p-0 rounded-full bg-primary text-primary-foreground touch-target"
+                hapticType="light"
               >
                 <Plus className="w-4 h-4" />
-              </Button>
+              </HapticButton>
             </div>
           )}
         </div>

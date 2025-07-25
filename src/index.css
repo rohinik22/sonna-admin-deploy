@@ -3,6 +3,18 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+ * ╔═══════════════════════════════════════════════════════════╗
+ * ║                    Design System                          ║
+ * ║              Crafted with passion & precision             ║
+ * ║                                                           ║
+ * ║    "CSS is the poetry of the web, where every rule       ║
+ * ║     tells a story and every selector sings a song"       ║
+ * ║                                                           ║
+ * ║                     ~ Mr. Sweet ~                         ║
+ * ╚═══════════════════════════════════════════════════════════╝
+ */
+
 /* Somas Cafe Design System - Steve Jobs Philosophy Implementation
 Dynamic color system with semantic tokens that auto-adapt
 Human-first minimalism with contextual fluidity
@@ -61,6 +73,15 @@ Human-first minimalism with contextual fluidity
     --touch-target-min: 44px;           /* Minimum accessible touch */
     --touch-target-comfortable: 48px;   /* Comfortable touch */
     --spacing-buffer: 20px;             /* Spacing buffer around small targets */
+    
+    /* Mobile-specific */
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-right: env(safe-area-inset-right);
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    --safe-area-inset-left: env(safe-area-inset-left);
+    
+    /* Mobile viewport */
+    --mobile-vh: 1vh;
 
     /* Radius Scale - Contextual */
     --radius-sm: 0.5rem;                /* 8px - Small elements */
@@ -227,6 +248,78 @@ Human-first minimalism with contextual fluidity
   .cta-primary:hover {
     transform: translateY(-1px);
     box-shadow: var(--shadow-xl);
+  }
+
+  /* Glassmorphism effects */
+  .glass-card {
+    background: var(--glass-background);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .glass-dark {
+    background: var(--glass-dark);
+    border: 1px solid var(--glass-dark-border);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  /* Floating Action Button */
+  .fab {
+    @apply fixed z-50 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all duration-300 hover:scale-110 active:scale-95;
+    background: var(--gradient-aurora);
+    bottom: calc(var(--mobile-nav-height) + 16px);
+    right: 16px;
+  }
+
+  /* Enhanced category cards */
+  .category-card {
+    @apply relative overflow-hidden rounded-2xl cursor-pointer transform transition-all duration-500;
+    background: linear-gradient(135deg, hsl(var(--card)), hsl(var(--accent) / 0.1));
+  }
+
+  .category-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  }
+
+  /* Advanced hover effects */
+  .hover-glow {
+    @apply relative transition-all duration-300;
+  }
+
+  .hover-glow:hover::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    background: var(--gradient-glow);
+    border-radius: inherit;
+    z-index: -1;
+    opacity: 0.7;
+  }
+
+  /* Slide animations */
+  .slide-enter {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+
+  .slide-enter-active {
+    transform: translateX(0);
+    opacity: 1;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
+  }
+
+  .slide-exit {
+    transform: translateX(0);
+    opacity: 1;
+  }
+
+  .slide-exit-active {
+    transform: translateX(-100%);
+    opacity: 0;
+    transition: transform 0.3s ease-out, opacity 0.3s ease-out;
   }
 
   /* Secondary Actions */
@@ -432,6 +525,40 @@ Human-first minimalism with contextual fluidity
   .touch-comfortable {
     min-height: var(--touch-target-comfortable);
     min-width: var(--touch-target-comfortable);
+  }
+
+  /* Mobile-specific utilities */
+  .mobile-scroll {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+
+  .mobile-safe-top {
+    padding-top: var(--safe-area-inset-top);
+  }
+
+  .mobile-safe-bottom {
+    padding-bottom: var(--safe-area-inset-bottom);
+  }
+
+  .mobile-vh {
+    height: calc(var(--mobile-vh) * 100);
+  }
+
+  /* Mobile gestures */
+  .swipe-container {
+    touch-action: pan-y;
+    -webkit-user-select: none;
+    user-select: none;
+  }
+
+  /* Haptic feedback classes */
+  .haptic-light {
+    transition: transform 0.1s ease-out;
+  }
+
+  .haptic-light:active {
+    transform: scale(0.98);
   }
 
   /* Motion Utilities */
