@@ -939,9 +939,9 @@ CREATE INDEX idx_reviews_menu_item ON reviews(menu_item_id);
 - **Analytics**: Google Analytics, Mixpanel
 
 ### Contact Information
-- **Technical Lead**: [Your contact info]
-- **Project Manager**: [PM contact info]
-- **Design Lead**: [Designer contact info]
+- **Technical Lead**: Me
+- **Project Manager**: Me
+- **Design Lead**: Also Me
 
 ---
 
