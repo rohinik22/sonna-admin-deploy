@@ -14,7 +14,7 @@ const urlsToCache = [
   '/manifest.json'
 ];
 
-// Install event
+// Install event - Sweet caching strategy
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME)

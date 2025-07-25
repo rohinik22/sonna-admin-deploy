@@ -1,5 +1,9 @@
 
 // Sonna's Complete Menu - Tempting experiences crafted with love
+/*
+ * 📋 Menu Data - The heart of culinary offerings
+ * Data architecture seasoned by Mr. Sweet
+ */
 export interface MenuItem {
   id: string;
   name: string;

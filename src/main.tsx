@@ -25,10 +25,30 @@ if ('serviceWorker' in navigator) {
 
 // Sweet console signature for those who peek behind the curtain
 if (process.env.NODE_ENV === 'development') {
-  console.log('%c🍰 Mr. Sweet %c- Crafting digital experiences with flavor', 
-    'color: #ff6b6b; font-size: 16px; font-weight: bold;',
-    'color: #4ecdc4; font-size: 12px;'
-  );
+  console.clear();
+  console.log('%c╔══════════════════════════════════════════════════════════════╗', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c║                                                              ║', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c║    ███╗   ███╗██████╗     ███████╗██╗    ██╗███████╗███████╗ ║', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c║    ████╗ ████║██╔══██╗    ██╔════╝██║    ██║██╔════╝██╔════╝ ║', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c║    ██╔████╔██║██████╔╝    ███████╗██║ █╗ ██║█████╗  █████╗   ║', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c║    ██║╚██╔╝██║██╔══██╗    ╚════██║██║███╗██║██╔══╝  ██╔══╝   ║', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c║    ██║ ╚═╝ ██║██║  ██║    ███████║╚███╔███╔╝███████╗███████╗ ║', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c║    ╚═╝     ╚═╝╚═╝  ╚═╝    ╚══════╝ ╚══╝╚══╝ ╚══════╝╚══════╝ ║', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c║                                                              ║', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c║           🎨 Crafting Digital Experiences with Flavor 🍰     ║', 'color: #4ecdc4; font-weight: bold;');
+  console.log('%c║                                                              ║', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c╚══════════════════════════════════════════════════════════════╝', 'color: #ff6b6b; font-weight: bold;');
+  console.log('%c                                                                ', 'color: #4ecdc4;');
+  console.log('%c          "Every line of code is a brushstroke of art"          ', 'color: #4ecdc4; font-style: italic;');
+  console.log('%c                                                                ', 'color: #4ecdc4;');
+  
+  // Hidden easter egg for curious developers
+  (window as any).__sweet_signature__ = {
+    artist: 'Mr. Sweet',
+    motto: 'Crafting digital experiences with flavor',
+    secret: 'console.log(window.__sweet_signature__.recipe) for a treat',
+    recipe: '🍰 Mix React + TypeScript + Love = Sweet Success'
+  };
 }
 
 createRoot(document.getElementById("root")!).render(<App />);

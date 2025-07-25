@@ -1,4 +1,8 @@
 
+/*
+ * 🛒 Cart Context - State management with a touch of sweetness
+ * Commerce logic orchestrated by Mr. Sweet
+ */
 import React, { createContext, useContext, useReducer, useEffect } from 'react';
 import { MenuItem } from '@/data/menuData';
 

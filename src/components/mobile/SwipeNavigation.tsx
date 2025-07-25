@@ -1,3 +1,7 @@
+/*
+ * 👆 Swipe Navigation - Fluid gestures, sweet transitions
+ * Navigation choreography by Mr. Sweet
+ */
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useSwipeGesture } from '@/hooks/useSwipeGesture';
 import { ReactNode } from 'react';

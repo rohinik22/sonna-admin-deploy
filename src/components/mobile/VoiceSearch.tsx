@@ -1,3 +1,7 @@
+/*
+ * 🎤 Voice Search - Listen to the sweet sound of UX
+ * Vocal interactions crafted by Mr. Sweet
+ */
 import { useState, useEffect } from 'react';
 import { Mic, MicOff, Search } from 'lucide-react';
 import { HapticButton } from './HapticButton';
