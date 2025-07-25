@@ -122,9 +122,7 @@ The app uses a custom design system built with Tailwind CSS featuring:
 
 ## 🚀 Deployment
 
-### Lovable Platform
-1. Open your [Lovable project](https://lovable.dev/projects/cab8efce-ac5b-464e-b629-c5e24195ecb3)
-2. Click **Share** → **Publish** to deploy instantly
+
 
 ### Custom Hosting
 The app generates standard web assets that can be deployed to any static hosting service:
@@ -156,7 +154,7 @@ To connect a custom domain:
 
 ## 📄 License
 
+
 Please ...
 
 ---
-
