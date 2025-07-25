@@ -144,14 +144,7 @@ To connect a custom domain:
 
 ## 📄 License
 
-This project is built with [Lovable](https://lovable.dev) - The AI-powered web development platform.
-
-## 🔗 Links
-
-- **Live Demo**: [Your deployed app URL]
-- **Lovable Project**: https://lovable.dev/projects/cab8efce-ac5b-464e-b629-c5e24195ecb3
-- **Documentation**: https://docs.lovable.dev/
+Please ...
 
 ---
 
-*Built with ❤️ using Lovable*
