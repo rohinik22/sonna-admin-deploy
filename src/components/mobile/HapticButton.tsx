@@ -1,3 +1,7 @@
+/*
+ * ✨ Haptic Button - Touch with soul
+ * Every tap tells a story - Mr. Sweet
+ */
 import { ReactNode, forwardRef } from 'react';
 import { Button, ButtonProps } from '@/components/ui/button';
 import { cn } from '@/lib/utils';

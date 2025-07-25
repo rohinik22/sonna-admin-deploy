@@ -1,4 +1,8 @@
 
+/*
+ * ⚡ Tailwind Configuration - Design system foundations
+ * Every pixel crafted with intention - Mr. Sweet
+ */
 import type { Config } from "tailwindcss";
 
 export default {

@@ -1,4 +1,8 @@
 
+/*
+ * 🎯 Header Component - The crown of every page
+ * Navigation poetry in motion - Mr. Sweet's touch
+ */
 import { ShoppingCart, Star, Heart, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -34,7 +38,7 @@ export const Header = ({ showBack, onBack, title }: HeaderProps) => {
   };
 
   return (
-    <header className="sticky top-0 z-50 glass-card border-b border-border/50" style={{ paddingTop: 'var(--safe-area-inset-top)' }}>
+    <header className="sticky top-0 z-50 glass-card border-b border-border/50" style={{ paddingTop: 'var(--safe-area-inset-top)' }} data-sweet-header="mr-sweet-navigation">
       <div className="flex items-center justify-between px-4 py-3">
         {/* Left side */}
         <div className="flex items-center gap-2 flex-1">

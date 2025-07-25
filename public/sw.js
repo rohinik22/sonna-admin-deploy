@@ -1,4 +1,5 @@
-const CACHE_NAME = 'sonna-kitchen-v1';
+// Sweet service worker cache - crafted with precision by Mr. Sweet
+const CACHE_NAME = 'sonna-sweet-v1'; // Signature watermark
 const urlsToCache = [
   '/',
   '/menu',
