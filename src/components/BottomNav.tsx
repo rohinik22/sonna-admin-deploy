@@ -34,15 +34,15 @@ export const BottomNav = () => {
               aria-current={isActive ? "page" : undefined}
             >
               <div className={cn(
-                "flex flex-col items-center gap-1 p-2 rounded-lg transition-all duration-300",
+                "flex flex-col items-center gap-0.5 p-1 rounded-lg transition-all duration-300",
                 isActive ? "bg-primary/10" : "hover:bg-accent/10"
               )}>
                 <Icon className={cn(
-                  "w-5 h-5 transition-all duration-300",
+                  "w-4 h-4 transition-all duration-300",
                   isActive ? "text-primary scale-110" : "text-muted-foreground group-hover:text-foreground"
                 )} />
                 <span className={cn(
-                  "text-micro font-medium transition-all duration-300",
+                  "text-[10px] font-medium transition-all duration-300",
                   isActive ? "text-primary" : "text-muted-foreground group-hover:text-foreground"
                 )}>
                   {item.label}
