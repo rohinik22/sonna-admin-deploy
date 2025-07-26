@@ -7,7 +7,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import Index from "./pages/Index";
@@ -22,6 +22,14 @@ import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import NotFound from "./pages/NotFound";
+// Admin Pages
+import AdminLogin from "./pages/admin/Login";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminOrders from "./pages/admin/Orders";
+import AdminMenuManagement from "./pages/admin/MenuManagement";
+import AdminKitchenDisplay from "./pages/admin/KitchenDisplay";
+import AdminAnalytics from "./pages/admin/Analytics";
+import AdminInventory from "./pages/admin/Inventory";
 
 // Enhanced query client with performance optimizations
 const queryClient = new QueryClient({
@@ -73,6 +81,15 @@ const App = () => (
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+              {/* Admin Routes */}
+              <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/orders" element={<AdminOrders />} />
+              <Route path="/admin/menu" element={<AdminMenuManagement />} />
+              <Route path="/admin/kitchen" element={<AdminKitchenDisplay />} />
+              <Route path="/admin/analytics" element={<AdminAnalytics />} />
+              <Route path="/admin/inventory" element={<AdminInventory />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
