@@ -23,6 +23,7 @@ import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import NotFound from "./pages/NotFound";
+<<<<<<< HEAD
 // Admin Pages
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -34,6 +35,9 @@ import AdminInventory from "./pages/admin/Inventory";
 import OrderManagement from "./pages/admin/OrderManagement";
 import CustomerManagement from "./pages/admin/CustomerManagement";
 import PromotionManagement from "./pages/admin/PromotionManagement";
+=======
+import DatabaseTest from "./components/DatabaseTest";
+>>>>>>> 591d7f5222478eb919dd6c7cd6b14aa07059e892
 
 // Enhanced query client with performance optimizations
 const queryClient = new QueryClient({
@@ -85,6 +89,7 @@ const App = () => (
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+<<<<<<< HEAD
               {/* Admin Routes */}
               <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
               <Route path="/admin/login" element={<AdminLogin />} />
@@ -133,6 +138,9 @@ const App = () => (
                   <PromotionManagement />
                 </ProtectedRoute>
               } />
+=======
+              <Route path="/database-test" element={<DatabaseTest />} />
+>>>>>>> 591d7f5222478eb919dd6c7cd6b14aa07059e892
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
