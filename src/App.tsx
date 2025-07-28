@@ -31,6 +31,9 @@ import AdminMenuManagement from "./pages/admin/MenuManagement";
 import AdminKitchenDisplay from "./pages/admin/KitchenDisplay";
 import AdminAnalytics from "./pages/admin/Analytics";
 import AdminInventory from "./pages/admin/Inventory";
+import OrderManagement from "./pages/admin/OrderManagement";
+import CustomerManagement from "./pages/admin/CustomerManagement";
+import PromotionManagement from "./pages/admin/PromotionManagement";
 
 // Enhanced query client with performance optimizations
 const queryClient = new QueryClient({
@@ -113,6 +116,21 @@ const App = () => (
               <Route path="/admin/inventory" element={
                 <ProtectedRoute requiredRole="admin">
                   <AdminInventory />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/order-management" element={
+                <ProtectedRoute requiredRole="admin">
+                  <OrderManagement />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/customers" element={
+                <ProtectedRoute requiredRole="admin">
+                  <CustomerManagement />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/promotions" element={
+                <ProtectedRoute requiredRole="admin">
+                  <PromotionManagement />
                 </ProtectedRoute>
               } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -12,6 +12,7 @@ import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { menuData } from '@/data/menuData';
 import { useLocation } from 'react-router-dom';
+import { RealTimeOrdersDashboard } from '@/components/RealTimeOrderStatus';
 import { 
   Search, 
   Filter, 

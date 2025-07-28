@@ -15,7 +15,10 @@ import {
   Plus,
   AlertTriangle,
   Package,
-  Users
+  Users,
+  ClipboardList,
+  UserCheck,
+  Gift
 } from 'lucide-react';
 
 // Sidebar items as specified in guide.md: "Sidebar: Menu | Orders | Analytics | Settings"
@@ -32,6 +35,21 @@ const navigationItems = [
     badge: '12'
   },
   {
+    title: 'Order Management',
+    href: '/admin/order-management',
+    icon: ClipboardList
+  },
+  {
+    title: 'Customers',
+    href: '/admin/customers',
+    icon: UserCheck
+  },
+  {
+    title: 'Promotions',
+    href: '/admin/promotions',
+    icon: Gift
+  },
+  {
     title: 'Menu',
     href: '/admin/menu',
     icon: MenuSquare
@@ -42,8 +60,13 @@ const navigationItems = [
     icon: BarChart3
   },
   {
-    title: 'Settings',
-    href: '/admin/settings',
+    title: 'Inventory',
+    href: '/admin/inventory',
+    icon: Package
+  },
+  {
+    title: 'Kitchen Display',
+    href: '/admin/kitchen',
     icon: Settings
   }
 ];

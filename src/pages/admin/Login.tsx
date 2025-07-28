@@ -16,23 +16,44 @@ import { useAuth } from '@/lib/auth';
 const AdminLogin = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { login, isAuthenticated } = useAuth();
+  const { login, isAuthenticated, logout } = useAuth();
   
-  const [email, setEmail] = useState('admin@sonnas.com');
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Redirect if already authenticated
+  // Clear any existing session on component mount
   useEffect(() => {
-    const checkAuth = async () => {
-      if (await isAuthenticated()) {
-        const from = (location.state as any)?.from?.pathname || '/admin/dashboard';
-        navigate(from, { replace: true });
+    const clearSession = async () => {
+      try {
+        await logout() // Clear any existing session
+      } catch (error) {
+        // Ignore logout errors
       }
     };
-    checkAuth();
-  }, [isAuthenticated, navigate, location]);
+    clearSession();
+  }, [logout]);
+
+  // Redirect if already authenticated (after initial session clear)
+  useEffect(() => {
+    const checkAuth = async () => {
+      try {
+        const isAuth = await isAuthenticated()
+        if (isAuth) {
+          const from = (location.state as any)?.from?.pathname || '/admin/dashboard';
+          navigate(from, { replace: true });
+        }
+      } catch (error) {
+        console.error('Auth check error:', error)
+        // Don't redirect on error
+      }
+    };
+    
+    // Delay auth check to allow session clearing first
+    const timeoutId = setTimeout(checkAuth, 100);
+    return () => clearTimeout(timeoutId);
+  }, []); // Remove dependencies to prevent auto-redirect on typing
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,6 +70,16 @@ const AdminLogin = () => {
       setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  // Debug function to check current auth state
+  const handleDebugAuth = async () => {
+    try {
+      const isAuth = await isAuthenticated();
+      alert(`Is Authenticated: ${isAuth}`);
+    } catch (error) {
+      alert(`Auth Error: ${error}`);
     }
   };
 
@@ -130,20 +161,17 @@ const AdminLogin = () => {
                     'Login to Admin Dashboard'
                   )}
                 </Button>
+                
+                {/* Debug button for troubleshooting */}
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  className="w-full" 
+                  onClick={handleDebugAuth}
+                >
+                  Debug: Check Auth Status
+                </Button>
               </form>
-              
-              <div className="mt-6 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                <p className="text-sm text-blue-700 mb-2">
-                  <strong>Demo Credentials:</strong>
-                </p>
-                <p className="text-xs text-blue-600">
-                  Email: admin@sonnas.com<br />
-                  Password: admin123
-                </p>
-                <p className="text-xs text-blue-500 mt-2">
-                  Note: Make sure to set up your Supabase project and update the environment variables before testing.
-                </p>
-              </div>
             </CardContent>
           </Card>
 

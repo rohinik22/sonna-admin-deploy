@@ -7,6 +7,9 @@ import { KPICard } from '@/components/dashboard/KPICard';
 import { RevenueChart } from '@/components/dashboard/RevenueChart';
 import { OrderMetrics } from '@/components/dashboard/OrderMetrics';
 import { RecentOrders } from '@/components/dashboard/RecentOrders';
+import { orderService } from '@/lib/orderService';
+import { userService } from '@/lib/userService';
+import { promotionService } from '@/lib/promotionService';
 import { TrendingUp, ShoppingCart, DollarSign, Star } from 'lucide-react';
 
 const Dashboard = () => {

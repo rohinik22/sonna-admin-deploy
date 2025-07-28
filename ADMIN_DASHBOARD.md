@@ -5,9 +5,7 @@
 
 ### 🔐 Admin Access
 - **Login Page**: `/admin/login` or `/admin` (redirects to login)
-- **Demo Credentials**: 
-  - Email: `admin@sonna-restaurant.com`
-  - Password: `admin123`
+- **Setup**: Configure admin credentials through Supabase Authentication
 
 ### 📊 Dashboard Pages
 
@@ -90,7 +88,7 @@
 
 1. **Access Admin Dashboard**:
    - Navigate to: `http://localhost:8081/admin`
-   - Use demo credentials to login
+   - Login with your configured admin credentials
    - Explore all dashboard features
 
 2. **Key Routes**:
