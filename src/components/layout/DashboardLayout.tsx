@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNotifications } from '@/hooks/useNotifications';
 import { cn } from '@/lib/utils';
 import { AdminHeader } from './AdminHeader';
 import { AdminSidebar } from './AdminSidebar';
@@ -14,6 +15,7 @@ export const DashboardLayout: React.FC<DashboardLayoutProps> = ({
 }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
+  useNotifications();
   return (
     <div className="min-h-screen bg-background">
       {/* Header */}

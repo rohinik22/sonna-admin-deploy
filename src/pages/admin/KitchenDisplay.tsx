@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { menuData } from '@/data/menuData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -40,115 +41,63 @@ interface KitchenOrder {
   completedItems: string[];
 }
 
-const mockKitchenOrders: KitchenOrder[] = [
-  {
-    id: '1',
-    orderNumber: '#1248',
-    customerName: 'Priya Sharma',
-    tableNumber: '12',
-    orderTime: new Date(Date.now() - 5 * 60 * 1000),
-    estimatedPrepTime: 15,
-    priority: 'urgent',
-    status: 'preparing',
-    deliveryType: 'dine_in',
-    startTime: new Date(Date.now() - 3 * 60 * 1000),
-    completedItems: ['item1'],
-    items: [
-      {
-        id: 'item1',
-        name: 'Paneer Tikka Pizza',
-        quantity: 1,
-        customizations: ['Extra paneer', 'Thin crust'],
-        allergens: ['Gluten', 'Dairy'],
-        station: 'pizza'
-      },
-      {
-        id: 'item2',
-        name: 'Mixed Veg Salad',
-        quantity: 1,
-        customizations: ['No onions'],
-        allergens: ['Dairy'],
-        station: 'cold'
-      },
-      {
-        id: 'item3',
-        name: 'Garlic Naan',
-        quantity: 2,
-        customizations: [],
-        allergens: ['Gluten'],
-        station: 'hot'
-      }
-    ],
-    specialInstructions: 'Customer allergic to nuts - please be careful'
-  },
-  {
-    id: '2',
-    orderNumber: '#1247',
-    customerName: 'Rohit Patel',
-    orderTime: new Date(Date.now() - 8 * 60 * 1000),
-    estimatedPrepTime: 12,
-    priority: 'normal',
-    status: 'acknowledged',
-    deliveryType: 'takeout',
-    completedItems: [],
-    items: [
-      {
-        id: 'item4',
-        name: 'Butter Chicken',
-        quantity: 1,
-        customizations: ['Extra gravy'],
-        allergens: ['Dairy'],
-        station: 'pizza'
-      },
-      {
-        id: 'item5',
-        name: 'Coke',
-        quantity: 2,
-        customizations: [],
-        allergens: [],
-        station: 'cold'
-      }
-    ]
-  },
-  {
-    id: '3',
-    orderNumber: '#1246',
-    customerName: 'Emily Davis',
-    orderTime: new Date(Date.now() - 15 * 60 * 1000),
-    estimatedPrepTime: 20,
-    priority: 'delayed',
-    status: 'cooking',
-    deliveryType: 'delivery',
-    startTime: new Date(Date.now() - 12 * 60 * 1000),
-    completedItems: ['item6', 'item7'],
-    items: [
-      {
-        id: 'item6',
-        name: 'Grilled Salmon',
-        quantity: 1,
-        customizations: ['Medium rare', 'Lemon on side'],
-        allergens: ['Fish'],
-        station: 'grill'
-      },
-      {
-        id: 'item7',
-        name: 'Quinoa Salad',
-        quantity: 1,
-        customizations: ['Vegan dressing'],
-        allergens: [],
-        station: 'cold'
-      },
-      {
-        id: 'item8',
-        name: 'Chocolate Cake',
-        quantity: 1,
-        customizations: [],
-        allergens: ['Gluten', 'Dairy', 'Eggs'],
-        station: 'dessert'
-      }
-    ]
-  }
+// Generate kitchen orders from menuData for full menu sync
+function getRandomInt(min: number, max: number) {
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
+const menuItemsFlat = menuData.flatMap(cat => cat.items);
+const sampleCustomers = [
+  { name: 'Priya Sharma', table: '12', deliveryType: 'dine_in' },
+  { name: 'Rohit Patel', table: undefined, deliveryType: 'takeout' },
+  { name: 'Anjali Reddy', table: undefined, deliveryType: 'delivery' },
+  { name: 'Suresh Kumar', table: '7', deliveryType: 'dine_in' },
+  { name: 'Meena Joshi', table: undefined, deliveryType: 'takeout' },
 ];
+
+const kitchenStations = ['hot', 'cold', 'pizza', 'dessert', 'grill'] as const;
+
+function getStationForMenuItem(itemName: string, category: string): KitchenOrder['items'][0]['station'] {
+  if (category.toLowerCase().includes('pizza')) return 'pizza';
+  if (category.toLowerCase().includes('dessert') || category.toLowerCase().includes('cake')) return 'dessert';
+  if (category.toLowerCase().includes('soup') || category.toLowerCase().includes('salad') || category.toLowerCase().includes('cold')) return 'cold';
+  if (category.toLowerCase().includes('grill')) return 'grill';
+  return 'hot';
+}
+
+const mockKitchenOrders: KitchenOrder[] = Array.from({ length: 5 }).map((_, idx) => {
+  const customer = sampleCustomers[idx % sampleCustomers.length];
+  // Pick 2-4 random menu items for each order
+  const orderItems = Array.from({ length: getRandomInt(2, 4) }).map(() => {
+    const menuItem = menuItemsFlat[getRandomInt(0, menuItemsFlat.length - 1)];
+    // Find the category name for this menu item
+    const category = menuData.find(cat => cat.items.some(i => i.id === menuItem.id))?.name || '';
+    return {
+      id: menuItem.id,
+      name: menuItem.name,
+      quantity: getRandomInt(1, 3),
+      customizations: menuItem.customizations ? [menuItem.customizations[getRandomInt(0, menuItem.customizations.length - 1)]] : [],
+      allergens: menuItem.allergens.map(a => a.charAt(0).toUpperCase() + a.slice(1)),
+      specialInstructions: undefined,
+      station: getStationForMenuItem(menuItem.name, category),
+    };
+  });
+  return {
+    id: (idx + 1).toString(),
+    orderNumber: `#${1248 - idx}`,
+    customerName: customer.name,
+    tableNumber: customer.table,
+    orderTime: new Date(Date.now() - getRandomInt(3, 20) * 60 * 1000),
+    estimatedPrepTime: getRandomInt(12, 25),
+    priority: ['normal', 'urgent', 'delayed'][getRandomInt(0, 2)] as KitchenOrder['priority'],
+    status: ['pending', 'acknowledged', 'preparing', 'cooking', 'ready'][getRandomInt(0, 4)] as KitchenOrder['status'],
+    deliveryType: customer.deliveryType as KitchenOrder['deliveryType'],
+    startTime: new Date(Date.now() - getRandomInt(1, 10) * 60 * 1000),
+    completedItems: [],
+    items: orderItems,
+    specialInstructions: getRandomInt(0, 2) === 0 ? undefined : 'No nuts, please',
+  };
+});
 
 const OrderTimer: React.FC<{ order: KitchenOrder }> = ({ order }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
