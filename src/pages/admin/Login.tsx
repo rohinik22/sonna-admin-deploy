@@ -1,21 +1,55 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Alert, AlertDescription } from '@/components/ui/alert';
 import { 
   Lock,
-  User
+  User,
+  AlertCircle,
+  Loader2
 } from 'lucide-react';
+import { useAuth } from '@/lib/auth';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { login, isAuthenticated } = useAuth();
+  
+  const [email, setEmail] = useState('admin@sonnas.com');
+  const [password, setPassword] = useState('admin123');
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleLogin = (e: React.FormEvent) => {
+  // Redirect if already authenticated
+  useEffect(() => {
+    const checkAuth = async () => {
+      if (await isAuthenticated()) {
+        const from = (location.state as any)?.from?.pathname || '/admin/dashboard';
+        navigate(from, { replace: true });
+      }
+    };
+    checkAuth();
+  }, [isAuthenticated, navigate, location]);
+
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
-    // In a real app, this would validate credentials
-    navigate('/admin/dashboard');
+    setIsLoading(true);
+    setError('');
+
+    try {
+      await login({ email, password });
+      
+      // Redirect to the page they tried to visit or dashboard
+      const from = (location.state as any)?.from?.pathname || '/admin/dashboard';
+      navigate(from, { replace: true });
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Login failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
 
@@ -46,6 +80,13 @@ const AdminLogin = () => {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              {error && (
+                <Alert variant="destructive">
+                  <AlertCircle className="h-4 w-4" />
+                  <AlertDescription>{error}</AlertDescription>
+                </Alert>
+              )}
+              
               <form onSubmit={handleLogin} className="space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="email">Email</Label>
@@ -54,10 +95,12 @@ const AdminLogin = () => {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="admin@sonna-restaurant.com"
-                      defaultValue="admin@sonna-restaurant.com"
+                      placeholder="admin@sonnas.com"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
                       className="pl-10"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
@@ -69,14 +112,23 @@ const AdminLogin = () => {
                       id="password"
                       type="password"
                       placeholder="••••••••"
-                      defaultValue="admin123"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
                       className="pl-10"
                       required
+                      disabled={isLoading}
                     />
                   </div>
                 </div>
-                <Button type="submit" className="w-full">
-                  Login to Admin Dashboard
+                <Button type="submit" className="w-full" disabled={isLoading}>
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    'Login to Admin Dashboard'
+                  )}
                 </Button>
               </form>
               
@@ -85,8 +137,11 @@ const AdminLogin = () => {
                   <strong>Demo Credentials:</strong>
                 </p>
                 <p className="text-xs text-blue-600">
-                  Email: admin@sonna-restaurant.com<br />
+                  Email: admin@sonnas.com<br />
                   Password: admin123
+                </p>
+                <p className="text-xs text-blue-500 mt-2">
+                  Note: Make sure to set up your Supabase project and update the environment variables before testing.
                 </p>
               </div>
             </CardContent>

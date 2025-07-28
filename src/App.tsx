@@ -10,6 +10,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
+import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
 import Search from "./pages/Search";
 import PreBook from "./pages/PreBook";
@@ -84,12 +85,36 @@ const App = () => (
               {/* Admin Routes */}
               <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
               <Route path="/admin/login" element={<AdminLogin />} />
-              <Route path="/admin/dashboard" element={<AdminDashboard />} />
-              <Route path="/admin/orders" element={<AdminOrders />} />
-              <Route path="/admin/menu" element={<AdminMenuManagement />} />
-              <Route path="/admin/kitchen" element={<AdminKitchenDisplay />} />
-              <Route path="/admin/analytics" element={<AdminAnalytics />} />
-              <Route path="/admin/inventory" element={<AdminInventory />} />
+              <Route path="/admin/dashboard" element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminDashboard />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/orders" element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminOrders />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/menu" element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminMenuManagement />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/kitchen" element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminKitchenDisplay />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/analytics" element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminAnalytics />
+                </ProtectedRoute>
+              } />
+              <Route path="/admin/inventory" element={
+                <ProtectedRoute requiredRole="admin">
+                  <AdminInventory />
+                </ProtectedRoute>
+              } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
