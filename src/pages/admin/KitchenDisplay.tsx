@@ -1,21 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { menuData } from '@/data/menuData';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Clock, 
-  Play, 
-  Pause, 
-  CheckCircle, 
-  AlertTriangle,
-  User,
-  MapPin,
-  MessageSquare,
-  Timer
-} from 'lucide-react';
+import { Clock, Play, Pause, CheckCircle, AlertTriangle, User, MapPin, MessageSquare, Timer } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { kitchenAPI } from '@/lib/api';
 
 interface KitchenOrder {
   id: string;
@@ -40,64 +30,6 @@ interface KitchenOrder {
   startTime?: Date;
   completedItems: string[];
 }
-
-// Generate kitchen orders from menuData for full menu sync
-function getRandomInt(min: number, max: number) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-const menuItemsFlat = menuData.flatMap(cat => cat.items);
-const sampleCustomers = [
-  { name: 'Priya Sharma', table: '12', deliveryType: 'dine_in' },
-  { name: 'Rohit Patel', table: undefined, deliveryType: 'takeout' },
-  { name: 'Anjali Reddy', table: undefined, deliveryType: 'delivery' },
-  { name: 'Suresh Kumar', table: '7', deliveryType: 'dine_in' },
-  { name: 'Meena Joshi', table: undefined, deliveryType: 'takeout' },
-];
-
-const kitchenStations = ['hot', 'cold', 'pizza', 'dessert', 'grill'] as const;
-
-function getStationForMenuItem(itemName: string, category: string): KitchenOrder['items'][0]['station'] {
-  if (category.toLowerCase().includes('pizza')) return 'pizza';
-  if (category.toLowerCase().includes('dessert') || category.toLowerCase().includes('cake')) return 'dessert';
-  if (category.toLowerCase().includes('soup') || category.toLowerCase().includes('salad') || category.toLowerCase().includes('cold')) return 'cold';
-  if (category.toLowerCase().includes('grill')) return 'grill';
-  return 'hot';
-}
-
-const mockKitchenOrders: KitchenOrder[] = Array.from({ length: 5 }).map((_, idx) => {
-  const customer = sampleCustomers[idx % sampleCustomers.length];
-  // Pick 2-4 random menu items for each order
-  const orderItems = Array.from({ length: getRandomInt(2, 4) }).map(() => {
-    const menuItem = menuItemsFlat[getRandomInt(0, menuItemsFlat.length - 1)];
-    // Find the category name for this menu item
-    const category = menuData.find(cat => cat.items.some(i => i.id === menuItem.id))?.name || '';
-    return {
-      id: menuItem.id,
-      name: menuItem.name,
-      quantity: getRandomInt(1, 3),
-      customizations: menuItem.customizations ? [menuItem.customizations[getRandomInt(0, menuItem.customizations.length - 1)]] : [],
-      allergens: menuItem.allergens.map(a => a.charAt(0).toUpperCase() + a.slice(1)),
-      specialInstructions: undefined,
-      station: getStationForMenuItem(menuItem.name, category),
-    };
-  });
-  return {
-    id: (idx + 1).toString(),
-    orderNumber: `#${1248 - idx}`,
-    customerName: customer.name,
-    tableNumber: customer.table,
-    orderTime: new Date(Date.now() - getRandomInt(3, 20) * 60 * 1000),
-    estimatedPrepTime: getRandomInt(12, 25),
-    priority: ['normal', 'urgent', 'delayed'][getRandomInt(0, 2)] as KitchenOrder['priority'],
-    status: ['pending', 'acknowledged', 'preparing', 'cooking', 'ready'][getRandomInt(0, 4)] as KitchenOrder['status'],
-    deliveryType: customer.deliveryType as KitchenOrder['deliveryType'],
-    startTime: new Date(Date.now() - getRandomInt(1, 10) * 60 * 1000),
-    completedItems: [],
-    items: orderItems,
-    specialInstructions: getRandomInt(0, 2) === 0 ? undefined : 'No nuts, please',
-  };
-});
 
 const OrderTimer: React.FC<{ order: KitchenOrder }> = ({ order }) => {
   const [elapsedTime, setElapsedTime] = useState(0);
@@ -145,7 +77,11 @@ const OrderTimer: React.FC<{ order: KitchenOrder }> = ({ order }) => {
   );
 };
 
-const OrderCard: React.FC<{ order: KitchenOrder }> = ({ order }) => {
+const OrderCard: React.FC<{ order: KitchenOrder; onStatusUpdate: (orderId: string, status: string) => void; onToggleItem: (orderId: string, itemId: string) => void }> = ({ 
+  order, 
+  onStatusUpdate, 
+  onToggleItem 
+}) => {
   const getPriorityColor = (priority: KitchenOrder['priority']) => {
     switch (priority) {
       case 'urgent':
@@ -204,14 +140,20 @@ const OrderCard: React.FC<{ order: KitchenOrder }> = ({ order }) => {
     }
   };
 
-  const handleStatusUpdate = (newStatus: KitchenOrder['status']) => {
-    // In a real app, this would update the order status via API
-    console.log(`Updating order ${order.orderNumber} to ${newStatus}`);
+  const handleStatusUpdate = async (newStatus: KitchenOrder['status']) => {
+    try {
+      await onStatusUpdate(order.id, newStatus);
+    } catch (error) {
+      console.error('Failed to update order status:', error);
+    }
   };
 
-  const toggleItemComplete = (itemId: string) => {
-    // In a real app, this would toggle item completion
-    console.log(`Toggling item ${itemId} completion`);
+  const toggleItemComplete = async (itemId: string) => {
+    try {
+      await onToggleItem(order.id, itemId);
+    } catch (error) {
+      console.error('Failed to toggle item completion:', error);
+    }
   };
 
   return (
@@ -403,26 +345,76 @@ const OrderCard: React.FC<{ order: KitchenOrder }> = ({ order }) => {
 
 const KitchenDisplay = () => {
   const [currentTime, setCurrentTime] = useState(new Date());
+  const [orders, setOrders] = useState<KitchenOrder[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentTime(new Date());
     }, 1000);
-
     return () => clearInterval(interval);
   }, []);
 
-  const pendingOrders = mockKitchenOrders.filter(order => 
+  useEffect(() => {
+    loadKitchenOrders();
+    const interval = setInterval(loadKitchenOrders, 30000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const loadKitchenOrders = async () => {
+    try {
+      setError(null);
+      const response = await kitchenAPI.getQueue();
+      setOrders(response.orders || []);
+    } catch (err) {
+      setError('Failed to load kitchen orders');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleStatusUpdate = async (orderId: string, status: string) => {
+    try {
+      await kitchenAPI.updateStatus(orderId, status);
+      await loadKitchenOrders();
+    } catch (error) {
+      console.error('Failed to update order status:', error);
+    }
+  };
+
+  const handleToggleItem = async (orderId: string, itemId: string) => {
+    try {
+      setOrders(prev => prev.map(order => 
+        order.id === orderId 
+          ? {
+              ...order,
+              completedItems: order.completedItems.includes(itemId)
+                ? order.completedItems.filter(id => id !== itemId)
+                : [...order.completedItems, itemId]
+            }
+          : order
+      ));
+    } catch (error) {
+      console.error('Failed to toggle item:', error);
+    }
+  };
+
+  const pendingOrders = orders.filter(order => 
     ['pending', 'acknowledged'].includes(order.status)
   );
   
-  const activeOrders = mockKitchenOrders.filter(order => 
+  const activeOrders = orders.filter(order => 
     ['preparing', 'cooking'].includes(order.status)
   );
   
-  const readyOrders = mockKitchenOrders.filter(order => 
+  const readyOrders = orders.filter(order => 
     order.status === 'ready'
   );
+
+  const avgPrepTime = orders.length > 0 
+    ? Math.round(orders.reduce((sum, order) => sum + order.estimatedPrepTime, 0) / orders.length)
+    : 0;
 
   return (
     <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
@@ -470,60 +462,96 @@ const KitchenDisplay = () => {
           </div>
           <div className="bg-white p-3 lg:p-4 rounded-lg border">
             <div className="text-lg lg:text-2xl font-bold text-gray-600">
-              {Math.round(mockKitchenOrders.reduce((sum, order) => sum + order.estimatedPrepTime, 0) / mockKitchenOrders.length)}
+              {avgPrepTime}
             </div>
             <div className="text-xs lg:text-sm text-gray-600">Avg Prep Time (min)</div>
           </div>
         </div>
       </div>
 
-      {/* Order Columns */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-        {/* Pending Orders */}
-        <div className="space-y-3 lg:space-y-4">
-          <h2 className="text-lg lg:text-xl font-bold text-blue-600 mb-3 lg:mb-4">
-            New Orders ({pendingOrders.length})
-          </h2>
-          {pendingOrders.map((order) => (
-            <OrderCard key={order.id} order={order} />
-          ))}
-          {pendingOrders.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              No pending orders
+        {/* Order Columns */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+          {/* Error Message */}
+          {error && (
+            <div className="col-span-1 lg:col-span-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+              <p className="text-red-700">{error}</p>
             </div>
           )}
-        </div>
 
-        {/* Active Orders */}
-        <div className="space-y-3 lg:space-y-4">
-          <h2 className="text-lg lg:text-xl font-bold text-orange-600 mb-3 lg:mb-4">
-            In Progress ({activeOrders.length})
-          </h2>
-          {activeOrders.map((order) => (
-            <OrderCard key={order.id} order={order} />
-          ))}
-          {activeOrders.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              No orders in progress
+          {/* Loading State */}
+          {loading && (
+            <div className="col-span-1 lg:col-span-3 flex items-center justify-center py-8">
+              <div className="text-center">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-2"></div>
+                <span>Loading kitchen orders...</span>
+              </div>
             </div>
           )}
-        </div>
 
-        {/* Ready Orders */}
-        <div className="space-y-4">
-          <h2 className="text-xl font-bold text-green-600 mb-4">
-            Ready ({readyOrders.length})
-          </h2>
-          {readyOrders.map((order) => (
-            <OrderCard key={order.id} order={order} />
-          ))}
-          {readyOrders.length === 0 && (
-            <div className="text-center py-8 text-gray-500">
-              No orders ready
-            </div>
+          {!loading && !error && (
+            <>
+              {/* Pending Orders */}
+              <div className="space-y-3 lg:space-y-4">
+                <h2 className="text-lg lg:text-xl font-bold text-blue-600 mb-3 lg:mb-4">
+                  New Orders ({pendingOrders.length})
+                </h2>
+                {pendingOrders.map((order) => (
+                  <OrderCard 
+                    key={order.id} 
+                    order={order} 
+                    onStatusUpdate={handleStatusUpdate}
+                    onToggleItem={handleToggleItem}
+                  />
+                ))}
+                {pendingOrders.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    No pending orders
+                  </div>
+                )}
+              </div>
+
+              {/* Active Orders */}
+              <div className="space-y-3 lg:space-y-4">
+                <h2 className="text-lg lg:text-xl font-bold text-orange-600 mb-3 lg:mb-4">
+                  In Progress ({activeOrders.length})
+                </h2>
+                {activeOrders.map((order) => (
+                  <OrderCard 
+                    key={order.id} 
+                    order={order} 
+                    onStatusUpdate={handleStatusUpdate}
+                    onToggleItem={handleToggleItem}
+                  />
+                ))}
+                {activeOrders.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    No orders in progress
+                  </div>
+                )}
+              </div>
+
+              {/* Ready Orders */}
+              <div className="space-y-4">
+                <h2 className="text-xl font-bold text-green-600 mb-4">
+                  Ready ({readyOrders.length})
+                </h2>
+                {readyOrders.map((order) => (
+                  <OrderCard 
+                    key={order.id} 
+                    order={order} 
+                    onStatusUpdate={handleStatusUpdate}
+                    onToggleItem={handleToggleItem}
+                  />
+                ))}
+                {readyOrders.length === 0 && (
+                  <div className="text-center py-8 text-gray-500">
+                    No orders ready
+                  </div>
+                )}
+              </div>
+            </>
           )}
         </div>
-      </div>
     </div>
   );
 };

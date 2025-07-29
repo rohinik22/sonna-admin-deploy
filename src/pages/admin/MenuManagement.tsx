@@ -1,34 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { ChevronDown, ChevronRight } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { FaRupeeSign } from "react-icons/fa";
 import { useLocation } from 'react-router-dom';
-
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { menuAPI } from '@/lib/api';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { menuData, type MenuItem as MenuDataItem, type MenuCategory } from '@/data/menuData';
-import { 
-  Search, 
-  Plus, 
-  Edit3, 
-  Trash2, 
-  Eye, 
-  EyeOff,
-  Clock,
-  Star,
-  AlertTriangle,
-  Image as ImageIcon,
-  Tag,
-  Save,
-  X
-} from 'lucide-react';
+import { Search, Plus, Edit3, Trash2, Eye, EyeOff, Clock, Star, AlertTriangle, Image as ImageIcon, Tag, Save, X } from 'lucide-react';
 
 interface MenuItem {
   id: string;
@@ -58,49 +44,8 @@ interface MenuItem {
   lastOrdered?: Date;
 }
 
-// Convert menu data to the management format
-const convertMenuData = (): MenuItem[] => {
-  const allItems: MenuItem[] = [];
-  
-  menuData.forEach(category => {
-    category.items.forEach(item => {
-      allItems.push({
-        id: item.id,
-        name: item.name,
-        description: item.description,
-        price: item.price,
-        originalPrice: item.originalPrice,
-        halfKgPrice: item.halfKgPrice,
-        fullKgPrice: item.fullKgPrice,
-        category: category.name,
-        image: item.image,
-        isAvailable: true, // Default to available
-        preparationTime: item.prepTime,
-        calories: item.calories,
-        allergens: item.allergens,
-        ingredients: item.ingredients,
-        customizations: item.customizations,
-        isVegan: item.dietaryInfo?.includes('Vegan') || false,
-        isVegetarian: true, // All items are vegetarian as per the menu
-        isGlutenFree: !item.allergens.includes('gluten'),
-        isPopular: item.isPopular,
-        isSignature: item.isSignature,
-        isBestSeller: item.isBestSeller,
-        spiceLevel: item.spiceLevel,
-        dietaryInfo: item.dietaryInfo,
-        popularity: 75 + Math.floor(Math.random() * 25), // Random popularity between 75-100
-        lastOrdered: new Date(Date.now() - Math.floor(Math.random() * 60 * 60 * 1000)) // Random last order within last hour
-      });
-    });
-  });
-  
-  return allItems;
-};
-
-// Get categories from menu data
-const categories = ['All', ...menuData.map(cat => cat.name)];
-
-const MenuItemCard: React.FC<{ 
+// Collapsible Card for menu item
+const CollapsibleMenuCard: React.FC<{
   item: MenuItem;
   onToggleAvailability: (id: string, isAvailable: boolean) => void;
   onEdit: (item: MenuItem) => void;
@@ -108,165 +53,113 @@ const MenuItemCard: React.FC<{
   isSelected?: boolean;
   onSelect?: (id: string, isSelected: boolean) => void;
 }> = ({ item, onToggleAvailability, onEdit, onDelete, isSelected = false, onSelect }) => {
+  const [expanded, setExpanded] = useState(false);
   const handleDelete = () => {
     if (confirm(`Are you sure you want to delete "${item.name}"? This action cannot be undone.`)) {
       onDelete(item.id);
     }
   };
-
-  const parseTime = (timeStr: string): number => {
-    const match = timeStr.match(/(\d+)/);
-    return match ? parseInt(match[1]) : 0;
-  };
-
   return (
-    <Card className={`hover:shadow-md transition-shadow ${isSelected ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}>
-      <CardHeader className="pb-3">
-        <div className="flex items-start space-x-3">
-          {/* Selection Checkbox */}
+    <Card className={`mb-4 transition-all duration-300 ease-in-out overflow-hidden ${isSelected ? 'ring-2 ring-blue-500 bg-blue-50' : ''}`}> 
+      <CardHeader className="px-4 py-3 cursor-pointer" onClick={() => setExpanded((e) => !e)}>
+        {/* First line: Checkbox and Name */}
+        <div className="flex items-center gap-2 min-w-0">
           {onSelect && (
             <input
               type="checkbox"
               checked={isSelected}
-              onChange={(e) => onSelect(item.id, e.target.checked)}
-              className="mt-1 h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              onChange={(e) => { e.stopPropagation(); onSelect(item.id, e.target.checked); }}
+              className="text-blue-600 border-gray-300 rounded"
+              onClick={e => e.stopPropagation()}
             />
           )}
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between space-y-3 sm:space-y-0 flex-1">
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-center space-y-1 sm:space-y-0 sm:space-x-2 mb-2">
-              <CardTitle className="text-base sm:text-lg truncate">{item.name}</CardTitle>
-              <div className="flex items-center gap-2 flex-wrap">
-                {!item.isAvailable && (
-                  <Badge variant="destructive" className="flex items-center gap-1 w-fit">
-                    <EyeOff className="w-3 h-3" />
-                    <span className="text-xs">Unavailable</span>
-                  </Badge>
-                )}
-                {item.isSignature && (
-                  <Badge variant="default" className="text-xs bg-purple-600">Signature</Badge>
-                )}
-                {item.isBestSeller && (
-                  <Badge variant="default" className="text-xs bg-orange-600">Best Seller</Badge>
-                )}
-                {item.isPopular && (
-                  <Badge variant="default" className="text-xs bg-blue-600">Popular</Badge>
-                )}
-              </div>
-            </div>
-            <CardDescription className="text-sm line-clamp-2">{item.description}</CardDescription>
-          </div>
-          {item.image && (
-            <img 
-              src={item.image} 
-              alt={item.name}
-              className="w-full h-32 sm:w-16 sm:h-16 rounded-lg object-cover sm:ml-4 flex-shrink-0"
-            />
+          <CardTitle className="font-semibold text-base sm:text-lg break-words max-w-xs md:max-w-md lg:max-w-lg">{item.name}</CardTitle>
+        </div>
+        {/* Second line: Labels/Badges */}
+        <div className="flex flex-wrap items-center gap-2 mt-2 min-w-0">
+          {!item.isAvailable && (
+            <Badge variant="destructive" className="flex items-center gap-1 w-fit whitespace-nowrap">
+              <EyeOff className="w-3 h-3" />
+              <span className="text-xs">Unavailable</span>
+            </Badge>
           )}
-          </div>
+          {item.isSignature && (
+            <Badge variant="default" className="text-xs bg-purple-600 whitespace-nowrap">Signature</Badge>
+          )}
+          {item.isBestSeller && (
+            <Badge variant="default" className="text-xs bg-orange-600 whitespace-nowrap">Best Seller</Badge>
+          )}
+          {item.isPopular && (
+            <Badge variant="default" className="text-xs bg-blue-600 whitespace-nowrap">Popular</Badge>
+          )}
+        </div>
+        {/* Third line: Price, Category, Collapsible Icon */}
+        <div className="flex items-center gap-2 mt-2 min-w-0">
+          <span className="text-muted-foreground font-semibold whitespace-nowrap">₹{item.price.toFixed(2)}</span>
+          <Badge variant="outline" className="text-xs whitespace-nowrap">{item.category}</Badge>
+          <button type="button" className="ml-2 p-1 rounded hover:bg-gray-100" onClick={e => { e.stopPropagation(); setExpanded((ex) => !ex); }}>
+            {expanded ? <ChevronDown className="w-5 h-5" /> : <ChevronRight className="w-5 h-5" />}
+          </button>
         </div>
       </CardHeader>
-      
-      <CardContent className="space-y-4">
-        {/* Price and Category */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2">
-            <span className="text-muted-foreground">₹</span>
-            <span className="font-semibold text-lg">{item.price.toFixed(2)}</span>
-            {item.halfKgPrice && (
-              <span className="text-sm text-muted-foreground">/ Half Kg: ₹{item.halfKgPrice}</span>
+      <CardContent
+        className={`px-4 pt-0 pb-4 transition-all duration-300 ease-in-out ${expanded ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'} overflow-hidden`}
+        style={{
+          paddingTop: expanded ? '1rem' : '0',
+        }}
+      >
+        {expanded && (
+          <div className="flex flex-col md:flex-row gap-4">
+            {item.image && (
+              <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded-lg border" />
             )}
-          </div>
-          <Badge variant="outline" className="text-xs">{item.category}</Badge>
-        </div>
-
-        {/* Details */}
-        <div className="grid grid-cols-2 gap-3 text-sm">
-          <div className="flex items-center space-x-2">
-            <Clock className="w-4 h-4 text-muted-foreground flex-shrink-0" />
-            <span className="truncate">{item.preparationTime}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <span className="text-muted-foreground">Cal:</span>
-            <span>{item.calories}</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <Star className="w-4 h-4 text-yellow-500 flex-shrink-0" />
-            <span className="truncate">{item.popularity}% popular</span>
-          </div>
-          <div className="flex items-center space-x-1">
-            <span className="text-muted-foreground text-xs">Spice:</span>
-            <span className="text-xs truncate">
-              {item.spiceLevel === 0 ? 'None' : item.spiceLevel === 1 ? 'Mild' : 'Hot'}
-            </span>
-          </div>
-        </div>
-
-        {/* Dietary Info */}
-        <div className="flex flex-wrap gap-1">
-          {item.isVegan && <Badge variant="outline" className="text-green-600 border-green-600 text-xs">Vegan</Badge>}
-          {item.isVegetarian && <Badge variant="outline" className="text-green-600 border-green-600 text-xs">Vegetarian</Badge>}
-          {item.isGlutenFree && <Badge variant="outline" className="text-blue-600 border-blue-600 text-xs">Gluten-Free</Badge>}
-        </div>
-
-        {/* Allergens */}
-        {item.allergens.length > 0 && (
-          <div className="space-y-2">
-            <div className="flex items-center space-x-2">
-              <AlertTriangle className="w-4 h-4 text-orange-500 flex-shrink-0" />
-              <span className="text-sm font-medium">Allergens:</span>
-            </div>
-            <div className="flex flex-wrap gap-1">
-              {item.allergens.map((allergen) => (
-                <Badge key={allergen} variant="outline" className="text-orange-600 border-orange-600 text-xs">
-                  {allergen}
-                </Badge>
-              ))}
+            <div className="flex-1 space-y-2 min-w-0">
+              <CardDescription className="text-sm text-muted-foreground break-words max-w-full">{item.description}</CardDescription>
+              <div className="flex flex-wrap gap-4 text-xs">
+                <div className="flex items-center gap-1 whitespace-nowrap"><Clock className="w-4 h-4" />{item.preparationTime}</div>
+                <div className="flex items-center gap-1 whitespace-nowrap">Cal: {item.calories}</div>
+                <div className="flex items-center gap-1 whitespace-nowrap"><Star className="w-4 h-4 text-yellow-500" />{item.popularity}%</div>
+                <div className="flex items-center gap-1 whitespace-nowrap">Spice: {item.spiceLevel === 0 ? 'None' : item.spiceLevel === 1 ? 'Mild' : 'Hot'}</div>
+              </div>
+              <div className="flex flex-wrap gap-1">
+                {item.isVegan && <Badge variant="outline" className="text-green-600 border-green-600 text-xs whitespace-nowrap">Vegan</Badge>}
+                {item.isVegetarian && <Badge variant="outline" className="text-green-600 border-green-600 text-xs whitespace-nowrap">Vegetarian</Badge>}
+                {item.isGlutenFree && <Badge variant="outline" className="text-blue-600 border-blue-600 text-xs whitespace-nowrap">Gluten-Free</Badge>}
+              </div>
+              {item.allergens.length > 0 && (
+                <div className="flex items-center gap-2 mt-2 flex-wrap">
+                  <AlertTriangle className="w-4 h-4 text-orange-500" />
+                  <span className="font-medium text-xs whitespace-nowrap">Allergens:</span>
+                  <div className="flex flex-wrap gap-1">
+                    {item.allergens.map((allergen) => (
+                      <Badge key={allergen} variant="outline" className="text-orange-600 border-orange-600 text-xs whitespace-nowrap">{allergen}</Badge>
+                    ))}
+                  </div>
+                </div>
+              )}
+              {item.ingredients.length > 0 && (
+                <div className="mt-2">
+                  <span className="font-medium text-xs whitespace-nowrap">Key Ingredients:</span>
+                  <span className="text-xs text-muted-foreground break-words"> {item.ingredients.slice(0, 3).join(', ')}{item.ingredients.length > 3 ? '...' : ''}</span>
+                </div>
+              )}
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 pt-3 border-t mt-2">
+                <div className="flex items-center gap-2">
+                  <Switch checked={item.isAvailable} onCheckedChange={(checked) => onToggleAvailability(item.id, checked)} />
+                  <Label className="text-sm whitespace-nowrap">Available</Label>
+                </div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <Button variant="outline" size="sm" className="text-xs whitespace-nowrap" onClick={() => onEdit(item)}>
+                    <Edit3 className="w-3 h-3 mr-1" />Edit
+                  </Button>
+                  <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700 text-xs whitespace-nowrap" onClick={handleDelete}>
+                    <Trash2 className="w-3 h-3 mr-1" />Delete
+                  </Button>
+                </div>
+              </div>
             </div>
           </div>
         )}
-
-        {/* Ingredients Preview */}
-        {item.ingredients.length > 0 && (
-          <div className="space-y-2">
-            <span className="text-sm font-medium">Key Ingredients:</span>
-            <p className="text-xs text-muted-foreground line-clamp-2">
-              {item.ingredients.slice(0, 3).join(', ')}{item.ingredients.length > 3 ? '...' : ''}
-            </p>
-          </div>
-        )}
-
-        {/* Actions */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-3 sm:space-y-0 pt-3 border-t">
-          <div className="flex items-center space-x-2">
-            <Switch 
-              checked={item.isAvailable} 
-              onCheckedChange={(checked) => onToggleAvailability(item.id, checked)}
-            />
-            <Label className="text-sm">Available</Label>
-          </div>
-          
-          <div className="flex items-center space-x-2 w-full sm:w-auto">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex-1 sm:flex-none text-xs sm:text-sm"
-              onClick={() => onEdit(item)}
-            >
-              <Edit3 className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-              Edit
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex-1 sm:flex-none text-red-600 hover:text-red-700 text-xs sm:text-sm"
-              onClick={handleDelete}
-            >
-              <Trash2 className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-              Delete
-            </Button>
-          </div>
-        </div>
       </CardContent>
     </Card>
   );
@@ -277,7 +170,8 @@ const AddMenuItemDialog: React.FC<{
   onClose: () => void;
   onSubmit: (item: Omit<MenuItem, 'id' | 'popularity' | 'lastOrdered'>) => void;
   editItem?: MenuItem;
-}> = ({ isOpen, onClose, onSubmit, editItem }) => {
+  categories: string[];
+}> = ({ isOpen, onClose, onSubmit, editItem, categories }) => {
   const [formData, setFormData] = useState<Omit<MenuItem, 'id' | 'popularity' | 'lastOrdered'>>({
     name: '',
     description: '',
@@ -694,11 +588,35 @@ const MenuManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [categoryFilter, setCategoryFilter] = useState('All');
   const [availabilityFilter, setAvailabilityFilter] = useState('all');
-  const [menuItems, setMenuItems] = useState<MenuItem[]>(convertMenuData());
+  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
+  const [categories, setCategories] = useState<string[]>(['All']);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [editingItem, setEditingItem] = useState<MenuItem | undefined>();
   const [selectedItems, setSelectedItems] = useState<Set<string>>(new Set());
   const [showBulkActions, setShowBulkActions] = useState(false);
+
+  // Load menu data from database
+  useEffect(() => {
+    const loadMenuData = async () => {
+      try {
+        setLoading(true);
+        const [itemsData, categoriesData] = await Promise.all([
+          menuAPI.getItems(),
+          menuAPI.getCategories()
+        ]);
+        setMenuItems(itemsData);
+        setCategories(['All', ...categoriesData.map((cat: any) => cat.name)]);
+      } catch (err) {
+        setError('Failed to load menu data');
+        console.error('Error loading menu data:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    loadMenuData();
+  }, []);
 
   // Check if we should open the add menu dialog from navigation state
   useEffect(() => {
@@ -709,13 +627,19 @@ const MenuManagement = () => {
     }
   }, [location.state]);
 
-  const handleToggleAvailability = (id: string, isAvailable: boolean) => {
-    setMenuItems(prev => prev.map(item => 
-      item.id === id ? { ...item, isAvailable } : item
-    ));
-    const item = menuItems.find(i => i.id === id);
-    if (item) {
-      alert(`${item.name} is now ${isAvailable ? 'available' : 'unavailable'}`);
+  const handleToggleAvailability = async (id: string, isAvailable: boolean) => {
+    try {
+      await menuAPI.updateItem(id, { isAvailable });
+      setMenuItems(prev => prev.map(item => 
+        item.id === id ? { ...item, isAvailable } : item
+      ));
+      const item = menuItems.find(i => i.id === id);
+      if (item) {
+        alert(`${item.name} is now ${isAvailable ? 'available' : 'unavailable'}`);
+      }
+    } catch (err) {
+      console.error('Error updating availability:', err);
+      alert('Failed to update item availability');
     }
   };
 
@@ -743,19 +667,37 @@ const MenuManagement = () => {
     setShowBulkActions(false);
   };
 
-  const handleBulkToggleAvailability = (isAvailable: boolean) => {
-    setMenuItems(prev => prev.map(item => 
-      selectedItems.has(item.id) ? { ...item, isAvailable } : item
-    ));
-    alert(`${selectedItems.size} items updated to ${isAvailable ? 'available' : 'unavailable'}`);
-    handleClearSelection();
+  const handleBulkToggleAvailability = async (isAvailable: boolean) => {
+    try {
+      const updatePromises = Array.from(selectedItems).map(id => 
+        menuAPI.updateItem(id, { isAvailable })
+      );
+      await Promise.all(updatePromises);
+      setMenuItems(prev => prev.map(item => 
+        selectedItems.has(item.id) ? { ...item, isAvailable } : item
+      ));
+      alert(`${selectedItems.size} items updated to ${isAvailable ? 'available' : 'unavailable'}`);
+      handleClearSelection();
+    } catch (err) {
+      console.error('Error bulk updating availability:', err);
+      alert('Failed to update some items');
+    }
   };
 
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (confirm(`Are you sure you want to delete ${selectedItems.size} items? This action cannot be undone.`)) {
-      setMenuItems(prev => prev.filter(item => !selectedItems.has(item.id)));
-      alert(`${selectedItems.size} items deleted successfully`);
-      handleClearSelection();
+      try {
+        const deletePromises = Array.from(selectedItems).map(id => 
+          menuAPI.deleteItem(id)
+        );
+        await Promise.all(deletePromises);
+        setMenuItems(prev => prev.filter(item => !selectedItems.has(item.id)));
+        alert(`${selectedItems.size} items deleted successfully`);
+        handleClearSelection();
+      } catch (err) {
+        console.error('Error bulk deleting items:', err);
+        alert('Failed to delete some items');
+      }
     }
   };
 
@@ -767,36 +709,63 @@ const MenuManagement = () => {
     handleClearSelection();
   };
 
-  const handleEditItem = (item: MenuItem) => {
+  const handleEditItemDialog = (item: MenuItem) => {
     setEditingItem(item);
     setShowAddDialog(true);
   };
 
-  const handleDeleteItem = (id: string) => {
-    setMenuItems(prev => prev.filter(item => item.id !== id));
-    alert('Menu item deleted successfully');
+  const handleDeleteItem = async (id: string) => {
+    try {
+      await menuAPI.deleteItem(id);
+      setMenuItems(prev => prev.filter(item => item.id !== id));
+      alert('Menu item deleted successfully');
+    } catch (err) {
+      console.error('Error deleting item:', err);
+      alert('Failed to delete menu item');
+    }
   };
 
-  const handleAddItem = (itemData: Omit<MenuItem, 'id' | 'popularity' | 'lastOrdered'>) => {
-    const newItem: MenuItem = {
-      ...itemData,
-      id: Date.now().toString(),
-      popularity: 0,
-      lastOrdered: undefined
-    };
-    setMenuItems(prev => [newItem, ...prev]);
-    alert(`${newItem.name} added successfully!`);
+  const handleAddItem = async (itemData: Omit<MenuItem, 'id' | 'popularity' | 'lastOrdered'>) => {
+    try {
+      const newItem = await menuAPI.addItem(itemData);
+      setMenuItems(prev => [newItem, ...prev]);
+      alert('Menu item added successfully');
+      setShowAddDialog(false);
+    } catch (err) {
+      console.error('Error adding item:', err);
+      alert('Failed to add menu item');
+    }
   };
 
-  const handleUpdateItem = (itemData: Omit<MenuItem, 'id' | 'popularity' | 'lastOrdered'>) => {
+  const handleEditItem = async (id: string, itemData: Partial<MenuItem>) => {
+    try {
+      const updatedItem = await menuAPI.updateItem(id, itemData);
+      setMenuItems(prev => prev.map(item => 
+        item.id === id ? updatedItem : item
+      ));
+      alert('Menu item updated successfully');
+      setEditingItem(undefined);
+    } catch (err) {
+      console.error('Error updating item:', err);
+      alert('Failed to update menu item');
+    }
+  };
+
+  const handleUpdateItem = async (itemData: Omit<MenuItem, 'id' | 'popularity' | 'lastOrdered'>) => {
     if (!editingItem) return;
     
-    setMenuItems(prev => prev.map(item => 
-      item.id === editingItem.id 
-        ? { ...item, ...itemData }
-        : item
-    ));
-    alert(`${itemData.name} updated successfully!`);
+    try {
+      const updatedItem = await menuAPI.updateItem(editingItem.id, itemData);
+      setMenuItems(prev => prev.map(item => 
+        item.id === editingItem.id ? updatedItem : item
+      ));
+      alert(`${itemData.name} updated successfully!`);
+      setEditingItem(undefined);
+      setShowAddDialog(false);
+    } catch (err) {
+      console.error('Error updating item:', err);
+      alert('Failed to update menu item');
+    }
   };
 
   const handleDialogClose = () => {
@@ -823,6 +792,23 @@ const MenuManagement = () => {
 
   return (
     <DashboardLayout>
+      {loading ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+            <p className="mt-4 text-muted-foreground">Loading menu items...</p>
+          </div>
+        </div>
+      ) : error ? (
+        <div className="flex items-center justify-center h-64">
+          <div className="text-center">
+            <p className="text-red-500 mb-4">{error}</p>
+            <Button onClick={() => window.location.reload()}>
+              Retry
+            </Button>
+          </div>
+        </div>
+      ) : (
       <div className="flex-1 space-y-6 p-6">
         {/* Header */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
@@ -1000,14 +986,14 @@ const MenuManagement = () => {
           </div>
         )}
 
-        {/* Menu Items Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-6">
+        {/* Collapsible Menu Cards */}
+        <div className="max-w-3xl mx-auto">
           {filteredItems.map((item) => (
-            <MenuItemCard 
-              key={item.id} 
-              item={item} 
+            <CollapsibleMenuCard
+              key={item.id}
+              item={item}
               onToggleAvailability={handleToggleAvailability}
-              onEdit={handleEditItem}
+              onEdit={handleEditItemDialog}
               onDelete={handleDeleteItem}
               isSelected={selectedItems.has(item.id)}
               onSelect={handleSelectItem}
@@ -1027,8 +1013,10 @@ const MenuManagement = () => {
           onClose={handleDialogClose}
           onSubmit={editingItem ? handleUpdateItem : handleAddItem}
           editItem={editingItem}
+          categories={categories}
         />
       </div>
+      )}
     </DashboardLayout>
   );
 };

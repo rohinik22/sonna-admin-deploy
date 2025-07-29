@@ -23,6 +23,9 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onMenuClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
 
+  const handleProfile = () => navigate('/admin/profile');
+  const handleSettings = () => navigate('/admin/settings');
+
   const handleLogout = () => {
     // Clear any stored auth tokens/data
     localStorage.removeItem('admin_token');
@@ -184,11 +187,11 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onMenuClick }) => {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="bg-background hover:bg-muted">
+              <DropdownMenuItem className="bg-background hover:bg-muted" onClick={handleProfile}>
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="bg-background hover:bg-muted">
+              <DropdownMenuItem className="bg-background hover:bg-muted" onClick={handleSettings}>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>

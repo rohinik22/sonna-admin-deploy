@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
@@ -8,19 +8,8 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { 
-  Search, 
-  Plus, 
-  AlertTriangle, 
-  Package, 
-  TrendingDown, 
-  TrendingUp,
-  Edit3,
-  Trash2,
-  Download,
-  Upload,
-  Clock
-} from 'lucide-react';
+import { Search, Plus, AlertTriangle, Package, TrendingDown, TrendingUp, Edit3, Trash2, Download, Upload, Clock, RefreshCw } from 'lucide-react';
+import { inventoryAPI } from '@/lib/api';
 
 interface InventoryItem {
   id: string;

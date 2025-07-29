@@ -10,29 +10,9 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { menuData } from '@/data/menuData';
 import { useLocation } from 'react-router-dom';
-import { 
-  Search, 
-  Filter, 
-  Eye, 
-  Clock, 
-  DollarSign, 
-  MapPin, 
-  Phone,
-  CheckCircle,
-  XCircle,
-  AlertTriangle,
-  ChefHat,
-  Truck,
-  Package,
-  Edit,
-  Calendar,
-  Users,
-  Plus,
-  Minus,
-  X
-} from 'lucide-react';
+import { Search, Filter, Eye, Clock, DollarSign, MapPin, Phone, CheckCircle, XCircle, AlertTriangle, ChefHat, Truck, Package, Edit, Calendar, Users, Plus, Minus, X, RefreshCw } from 'lucide-react';
+import { ordersAPI } from '@/lib/api';
 
 interface Order {
   id: string;
@@ -410,7 +390,7 @@ const OrderDetailsModal: React.FC<{ order: Order | null; onClose: () => void }> 
     <Dialog open={!!order} onOpenChange={onClose}>
       <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle className="flex items-center justify-between">
+          <DialogTitle className="flex items-center justify-between pr-8">
             <span>Order Details - {order.orderNumber}</span>
             <Badge className={`${getStatusColor(order.status)} text-xs px-2 py-1`}>
               {getStatusText(order.status)}
@@ -554,362 +534,32 @@ const OrderDetailsModal: React.FC<{ order: Order | null; onClose: () => void }> 
   );
 };
 
-interface OrderItem {
-  id: string;
-  name: string;
-  quantity: number;
-  price: number;
-  customizations?: string[];
-}
 
-interface NewOrderFormData {
-  customer: {
-    name: string;
-    email: string;
-    phone: string;
-  };
-  items: OrderItem[];
-  deliveryAddress: string;
-  paymentMethod: string;
-  specialInstructions: string;
-}
-
-const NewOrderForm: React.FC<{ 
-  isOpen: boolean; 
-  onClose: () => void; 
-  onSubmit: (order: NewOrderFormData) => void; 
-}> = ({ isOpen, onClose, onSubmit }) => {
-  const [formData, setFormData] = useState<NewOrderFormData>({
-    customer: {
-      name: '',
-      email: '',
-      phone: ''
-    },
-    items: [],
-    deliveryAddress: '',
-    paymentMethod: 'cash',
-    specialInstructions: ''
-  });
-
-  const [activeCategory, setActiveCategory] = useState('cakes');
-  const [searchTerm, setSearchTerm] = useState('');
-
-  const handleAddItem = (menuItem: any) => {
-    const existingItem = formData.items.find(item => item.id === menuItem.id);
-    
-    if (existingItem) {
-      setFormData(prev => ({
-        ...prev,
-        items: prev.items.map(item => 
-          item.id === menuItem.id 
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      }));
-    } else {
-      setFormData(prev => ({
-        ...prev,
-        items: [...prev.items, {
-          id: menuItem.id,
-          name: menuItem.name,
-          quantity: 1,
-          price: menuItem.price
-        }]
-      }));
-    }
-  };
-
-  const handleRemoveItem = (itemId: string) => {
-    setFormData(prev => ({
-      ...prev,
-      items: prev.items.filter(item => item.id !== itemId)
-    }));
-  };
-
-  const handleUpdateQuantity = (itemId: string, newQuantity: number) => {
-    if (newQuantity <= 0) {
-      handleRemoveItem(itemId);
-      return;
-    }
-
-    setFormData(prev => ({
-      ...prev,
-      items: prev.items.map(item => 
-        item.id === itemId 
-          ? { ...item, quantity: newQuantity }
-          : item
-      )
-    }));
-  };
-
-  const calculateTotal = () => {
-    return formData.items.reduce((total, item) => total + (item.price * item.quantity), 0);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    
-    if (!formData.customer.name || !formData.customer.phone || formData.items.length === 0) {
-      alert('Please fill in all required fields and add at least one item.');
-      return;
-    }
-
-    onSubmit(formData);
-    
-    // Reset form
-    setFormData({
-      customer: { name: '', email: '', phone: '' },
-      items: [],
-      deliveryAddress: '',
-      paymentMethod: 'cash',
-      specialInstructions: ''
-    });
-    
-    onClose();
-  };
-
-  const filteredMenuItems = menuData
-    .find(category => category.id === activeCategory)
-    ?.items.filter(item => 
-      item.name.toLowerCase().includes(searchTerm.toLowerCase())
-    ) || [];
-
-  return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-6xl max-h-[90vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle>Create New Order</DialogTitle>
-        </DialogHeader>
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-            {/* Customer Information */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-lg">Customer Details</h3>
-              <div className="grid grid-cols-1 gap-3">
-                <div>
-                  <Label htmlFor="customerName">Customer Name *</Label>
-                  <Input
-                    id="customerName"
-                    value={formData.customer.name}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      customer: { ...prev.customer, name: e.target.value }
-                    }))}
-                    placeholder="Enter customer name"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="customerPhone">Phone Number *</Label>
-                  <Input
-                    id="customerPhone"
-                    value={formData.customer.phone}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      customer: { ...prev.customer, phone: e.target.value }
-                    }))}
-                    placeholder="+91 98765 43210"
-                    required
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="customerEmail">Email</Label>
-                  <Input
-                    id="customerEmail"
-                    type="email"
-                    value={formData.customer.email}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      customer: { ...prev.customer, email: e.target.value }
-                    }))}
-                    placeholder="customer@email.com"
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="deliveryAddress">Delivery Address</Label>
-                  <Textarea
-                    id="deliveryAddress"
-                    value={formData.deliveryAddress}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      deliveryAddress: e.target.value
-                    }))}
-                    placeholder="Enter full delivery address"
-                    rows={3}
-                  />
-                </div>
-                <div>
-                  <Label htmlFor="paymentMethod">Payment Method</Label>
-                  <Select value={formData.paymentMethod} onValueChange={(value) => 
-                    setFormData(prev => ({ ...prev, paymentMethod: value }))
-                  }>
-                    <SelectTrigger>
-                      <SelectValue />
-                    </SelectTrigger>
-                    <SelectContent className="bg-background border border-border shadow-lg">
-                      <SelectItem value="cash" className="bg-background hover:bg-muted">Cash on Delivery</SelectItem>
-                      <SelectItem value="upi" className="bg-background hover:bg-muted">UPI</SelectItem>
-                      <SelectItem value="card" className="bg-background hover:bg-muted">Credit/Debit Card</SelectItem>
-                      <SelectItem value="online" className="bg-background hover:bg-muted">Online Payment</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-                <div>
-                  <Label htmlFor="specialInstructions">Special Instructions</Label>
-                  <Textarea
-                    id="specialInstructions"
-                    value={formData.specialInstructions}
-                    onChange={(e) => setFormData(prev => ({
-                      ...prev,
-                      specialInstructions: e.target.value
-                    }))}
-                    placeholder="Any special requests or notes"
-                    rows={2}
-                  />
-                </div>
-              </div>
-            </div>
-
-            {/* Menu Items Selection */}
-            <div className="space-y-4">
-              <h3 className="font-semibold text-lg">Select Items</h3>
-              
-              {/* Category Tabs */}
-              <div className="flex flex-wrap gap-2">
-                {menuData.map(category => (
-                  <Button
-                    key={category.id}
-                    type="button"
-                    variant={activeCategory === category.id ? "default" : "outline"}
-                    size="sm"
-                    onClick={() => setActiveCategory(category.id)}
-                    className="text-xs"
-                  >
-                    {category.emoji} {category.name}
-                  </Button>
-                ))}
-              </div>
-
-              {/* Search Items */}
-              <div className="relative">
-                <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                <Input
-                  placeholder="Search menu items..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-8"
-                />
-              </div>
-
-              {/* Menu Items */}
-              <div className="max-h-64 overflow-y-auto space-y-2 border rounded-lg p-3">
-                {filteredMenuItems.map(item => (
-                  <div key={item.id} className="flex items-center justify-between p-2 border rounded hover:bg-muted/50">
-                    <div className="flex-1">
-                      <div className="font-medium text-sm">{item.name}</div>
-                      <div className="text-xs text-muted-foreground">₹{item.price}</div>
-                    </div>
-                    <Button
-                      type="button"
-                      size="sm"
-                      onClick={() => handleAddItem(item)}
-                      className="text-xs"
-                    >
-                      <Plus className="h-3 w-3 mr-1" />
-                      Add
-                    </Button>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-
-          {/* Selected Items */}
-          {formData.items.length > 0 && (
-            <div className="space-y-4">
-              <h3 className="font-semibold text-lg">Selected Items ({formData.items.length})</h3>
-              <div className="space-y-2 max-h-48 overflow-y-auto border rounded-lg p-3">
-                {formData.items.map(item => (
-                  <div key={item.id} className="flex items-center justify-between p-2 bg-muted/30 rounded">
-                    <div className="flex-1">
-                      <div className="font-medium text-sm">{item.name}</div>
-                      <div className="text-xs text-muted-foreground">₹{item.price} each</div>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleUpdateQuantity(item.id, item.quantity - 1)}
-                        className="h-6 w-6 p-0"
-                      >
-                        <Minus className="h-3 w-3" />
-                      </Button>
-                      <span className="text-sm font-medium w-8 text-center">{item.quantity}</span>
-                      <Button
-                        type="button"
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleUpdateQuantity(item.id, item.quantity + 1)}
-                        className="h-6 w-6 p-0"
-                      >
-                        <Plus className="h-3 w-3" />
-                      </Button>
-                      <Button
-                        type="button"
-                        variant="destructive"
-                        size="sm"
-                        onClick={() => handleRemoveItem(item.id)}
-                        className="h-6 w-6 p-0 ml-2"
-                      >
-                        <X className="h-3 w-3" />
-                      </Button>
-                    </div>
-                    <div className="text-sm font-medium ml-4">
-                      ₹{(item.price * item.quantity).toFixed(2)}
-                    </div>
-                  </div>
-                ))}
-                <div className="flex justify-between items-center pt-3 border-t-2 border-primary/20">
-                  <span className="font-semibold">Total Amount:</span>
-                  <span className="text-lg font-bold text-primary">₹{calculateTotal().toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Submit Buttons */}
-          <div className="flex justify-end space-x-3 pt-4 border-t">
-            <Button type="button" variant="outline" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={formData.items.length === 0}>
-              Create Order
-            </Button>
-          </div>
-        </form>
-      </DialogContent>
-    </Dialog>
-  );
-};
 
 const Orders = () => {
   const location = useLocation();
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [orders, setOrders] = useState<Order[]>(mockOrders);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
-  const [showNewOrderForm, setShowNewOrderForm] = useState(false);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Check if we should open the new order form from navigation state
   useEffect(() => {
-    if (location.state?.openNewOrderForm) {
-      setShowNewOrderForm(true);
-      // Clear the state to prevent reopening on subsequent renders
-      window.history.replaceState({}, document.title);
+    loadOrders();
+  }, []);
+
+  const loadOrders = async () => {
+    try {
+      setError(null);
+      const response = await ordersAPI.getAll();
+      setOrders(response.orders || []);
+    } catch (err) {
+      setError('Failed to load orders');
+    } finally {
+      setLoading(false);
     }
-  }, [location.state]);
+  };
 
   const handleCallCustomer = (phone: string, customerName: string) => {
     // In a real app, this could integrate with a calling service
@@ -921,10 +571,6 @@ const Orders = () => {
     if (order) {
       setSelectedOrder(order);
     }
-  };
-
-  const handleNewOrder = () => {
-    setShowNewOrderForm(true);
   };
 
   const handleStatusUpdate = (orderId: string, newStatus: Order['status']) => {
@@ -971,35 +617,6 @@ const Orders = () => {
     }
   };
 
-  const handleCreateNewOrder = (orderData: NewOrderFormData) => {
-    const newOrder: Order = {
-      id: Date.now().toString(),
-      orderNumber: `#${1200 + orders.length + 1}`,
-      customer: {
-        name: orderData.customer.name,
-        email: orderData.customer.email,
-        phone: orderData.customer.phone,
-        initials: orderData.customer.name.split(' ').map(n => n[0]).join('').toUpperCase()
-      },
-      items: orderData.items.map(item => ({
-        name: item.name,
-        quantity: item.quantity,
-        price: item.price
-      })),
-      total: orderData.items.reduce((total, item) => total + (item.price * item.quantity), 0),
-      status: 'pending',
-      orderTime: new Date(),
-      estimatedDelivery: new Date(Date.now() + 45 * 60 * 1000), // 45 minutes from now
-      deliveryAddress: orderData.deliveryAddress,
-      paymentMethod: orderData.paymentMethod,
-      paymentStatus: orderData.paymentMethod === 'cash' ? 'pending' : 'paid',
-      specialInstructions: orderData.specialInstructions
-    };
-
-    setOrders(prev => [newOrder, ...prev]);
-    alert(`Order ${newOrder.orderNumber} created successfully!`);
-  };
-
   const filteredOrders = orders.filter(order => {
     const matchesSearch = order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          order.customer.name.toLowerCase().includes(searchTerm.toLowerCase());
@@ -1028,10 +645,6 @@ const Orders = () => {
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight">Orders</h1>
             <p className="text-muted-foreground text-sm md:text-base">Manage and track all customer orders</p>
           </div>
-          <Button className="w-full sm:w-auto" onClick={handleNewOrder}>
-            <span className="sm:hidden">+ New</span>
-            <span className="hidden sm:inline">+ New Order</span>
-          </Button>
         </div>
 
         {/* Filters - Mobile optimized */}
@@ -1173,10 +786,6 @@ const Orders = () => {
                   <Package className="h-12 w-12 text-gray-400 mb-4" />
                   <h3 className="text-lg font-medium text-gray-900 mb-2">No orders found</h3>
                   <p className="text-gray-500 mb-4">There are no orders matching your current filters.</p>
-                  <Button onClick={() => setShowNewOrderForm(true)} className="bg-blue-600 hover:bg-blue-700">
-                    <Plus className="h-4 w-4 mr-2" />
-                    Create New Order
-                  </Button>
                 </div>
               )}
             </div>
@@ -1305,13 +914,6 @@ const Orders = () => {
       <OrderDetailsModal 
         order={selectedOrder} 
         onClose={() => setSelectedOrder(null)} 
-      />
-      
-      {/* New Order Form Modal */}
-      <NewOrderForm 
-        isOpen={showNewOrderForm}
-        onClose={() => setShowNewOrderForm(false)}
-        onSubmit={handleCreateNewOrder}
       />
     </DashboardLayout>
   );
