@@ -45,7 +45,7 @@ const AdminProfile: React.FC = () => {
 
   // Load profile data from database
   useEffect(() => {
-    const loadProfile = async () => {
+    (async () => {
       try {
         setIsLoading(true);
         const profileData = await profileAPI.get();
@@ -59,8 +59,8 @@ const AdminProfile: React.FC = () => {
           bio: profileData.bio || '',
           avatar: profileData.avatar || ''
         });
-        setSecurity(prev => ({ 
-          ...prev, 
+        setSecurity(prev => ({
+          ...prev,
           twoFactorEnabled: profileData.two_factor_enabled || false,
           emailNotifications: profileData.email_notifications || true,
           smsNotifications: profileData.sms_notifications || false,
@@ -72,8 +72,7 @@ const AdminProfile: React.FC = () => {
       } finally {
         setIsLoading(false);
       }
-    };
-    loadProfile();
+    })();
   }, []);
 
   const handleProfileUpdate = async () => {
@@ -96,35 +95,15 @@ const AdminProfile: React.FC = () => {
 
   const handlePasswordChange = async () => {
     if (security.newPassword !== security.confirmPassword) {
-      toast({
-        title: "Error",
-        description: "New passwords do not match.",
-        variant: "destructive",
-      });
+      toast({ title: "Error", description: "New passwords do not match.", variant: "destructive" });
       return;
     }
-    
     try {
-      await profileAPI.updatePassword({
-        currentPassword: security.currentPassword,
-        newPassword: security.newPassword
-      });
-      setSecurity(prev => ({
-        ...prev,
-        currentPassword: '',
-        newPassword: '',
-        confirmPassword: ''
-      }));
-      toast({
-        title: "Password Updated",
-        description: "Your password has been successfully changed.",
-      });
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Failed to update password. Please try again.",
-        variant: "destructive",
-      });
+      await profileAPI.updatePassword({ currentPassword: security.currentPassword, newPassword: security.newPassword });
+      setSecurity(prev => ({ ...prev, currentPassword: '', newPassword: '', confirmPassword: '' }));
+      toast({ title: "Password Updated", description: "Your password has been successfully changed." });
+    } catch {
+      toast({ title: "Error", description: "Failed to update password. Please try again.", variant: "destructive" });
     } finally {
       setIsLoading(false);
     }

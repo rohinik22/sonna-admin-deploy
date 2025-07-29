@@ -7,11 +7,9 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { useLocation } from 'react-router-dom';
-import { Search, Filter, Eye, Clock, DollarSign, MapPin, Phone, CheckCircle, XCircle, AlertTriangle, ChefHat, Truck, Package, Edit, Calendar, Users, Plus, Minus, X, RefreshCw } from 'lucide-react';
+import { Search, Filter, Eye, Clock, DollarSign, MapPin, Phone, CheckCircle, ChefHat, Truck, Package, Edit, Calendar, Users } from 'lucide-react';
 import { ordersAPI } from '@/lib/api';
 
 interface Order {
@@ -40,118 +38,33 @@ interface Order {
   specialInstructions?: string;
 }
 
-const mockOrders: Order[] = [
-  {
-    id: '1',
-    orderNumber: '#1248',
-    customer: {
-      name: 'Priya Sharma',
-      email: 'priya.sharma@email.com',
-      phone: '+91 98765 43210',
-      initials: 'PS'
-    },
-    items: [
-      { name: 'Paneer Tikka Pizza', quantity: 1, price: 285.50 },
-      { name: 'Mixed Veg Salad', quantity: 1, price: 180.00 },
-      { name: 'Garlic Naan', quantity: 2, price: 90.00 }
-    ],
-    total: 555.50,
-    status: 'preparing',
-    orderTime: new Date(Date.now() - 10 * 60 * 1000),
-    estimatedDelivery: new Date(Date.now() + 20 * 60 * 1000),
-    deliveryAddress: '15/A, MG Road, Hubli, Karnataka 580020',
-    paymentMethod: 'UPI',
-    paymentStatus: 'paid',
-    specialInstructions: 'Extra paneer on pizza'
-  },
-  {
-    id: '2',
-    orderNumber: '#1247',
-    customer: {
-      name: 'Rohit Patel',
-      email: 'rohit.patel@email.com',
-      phone: '+91 87654 32109',
-      initials: 'RP'
-    },
-    items: [
-      { name: 'Butter Chicken', quantity: 1, price: 340.00 },
-      { name: 'Masala Chai', quantity: 2, price: 90.00 }
-    ],
-    total: 430.00,
-    status: 'ready',
-    orderTime: new Date(Date.now() - 25 * 60 * 1000),
-    estimatedDelivery: new Date(Date.now() + 5 * 60 * 1000),
-    deliveryAddress: '22, Vidyanagar, Hubli, Karnataka 580029',
-    paymentMethod: 'Cash on Delivery',
-    paymentStatus: 'pending'
-  },
-  {
-    id: '3',
-    orderNumber: '#1246',
-    customer: {
-      name: 'Anjali Reddy',
-      email: 'anjali.reddy@email.com',
-      phone: '+91 76543 21098',
-      initials: 'AR'
-    },
-    items: [
-      { name: 'Gulab Jamun', quantity: 4, price: 480.00 },
-      { name: 'Masala Chai', quantity: 3, price: 135.00 }
-    ],
-    total: 615.00,
-    status: 'delivered',
-    orderTime: new Date(Date.now() - 45 * 60 * 1000),
-    estimatedDelivery: new Date(Date.now() - 10 * 60 * 1000),
-    deliveryAddress: '8, Nehru Nagar, Hubli, Karnataka 580031',
-    paymentMethod: 'Credit Card',
-    paymentStatus: 'paid'
-  }
-];
 
 const getStatusColor = (status: Order['status']) => {
-  switch (status) {
-    case 'pending':
-      return 'bg-gray-100 text-gray-700';
-    case 'confirmed':
-      return 'bg-blue-100 text-blue-700';
-    case 'preparing':
-      return 'bg-yellow-100 text-yellow-700';
-    case 'cooking':
-      return 'bg-orange-100 text-orange-700';
-    case 'ready':
-      return 'bg-green-100 text-green-700';
-    case 'out_for_delivery':
-      return 'bg-purple-100 text-purple-700';
-    case 'delivered':
-      return 'bg-emerald-100 text-emerald-700';
-    case 'cancelled':
-      return 'bg-red-100 text-red-700';
-    default:
-      return 'bg-gray-100 text-gray-700';
-  }
+  const map: Record<Order['status'], string> = {
+    pending: 'bg-gray-100 text-gray-700',
+    confirmed: 'bg-blue-100 text-blue-700',
+    preparing: 'bg-yellow-100 text-yellow-700',
+    cooking: 'bg-orange-100 text-orange-700',
+    ready: 'bg-green-100 text-green-700',
+    out_for_delivery: 'bg-purple-100 text-purple-700',
+    delivered: 'bg-emerald-100 text-emerald-700',
+    cancelled: 'bg-red-100 text-red-700'
+  };
+  return map[status] || map['pending'];
 };
 
 const getStatusText = (status: Order['status']) => {
-  switch (status) {
-    case 'pending':
-      return 'Pending';
-    case 'confirmed':
-      return 'Confirmed';
-    case 'preparing':
-      return 'Preparing';
-    case 'cooking':
-      return 'Cooking';
-    case 'ready':
-      return 'Ready';
-    case 'out_for_delivery':
-      return 'Out for Delivery';
-    case 'delivered':
-      return 'Delivered';
-    case 'cancelled':
-      return 'Cancelled';
-    default:
-      return status;
-  }
+  const map: Record<Order['status'], string> = {
+    pending: 'Pending',
+    confirmed: 'Confirmed',
+    preparing: 'Preparing',
+    cooking: 'Cooking',
+    ready: 'Ready',
+    out_for_delivery: 'Out for Delivery',
+    delivered: 'Delivered',
+    cancelled: 'Cancelled'
+  };
+  return map[status] || status;
 };
 
 const OrderCard: React.FC<{ 
@@ -179,20 +92,8 @@ const OrderCard: React.FC<{
   onCancel,
   onDelete
 }) => {
-  const formatTime = (date: Date) => {
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
-      minute: '2-digit',
-      hour12: true 
-    });
-  };
-
-  const getTimeAgo = (date: Date) => {
-    const minutes = Math.floor((Date.now() - date.getTime()) / (1000 * 60));
-    if (minutes < 60) return `${minutes}m ago`;
-    const hours = Math.floor(minutes / 60);
-    return `${hours}h ago`;
-  };
+  const formatTime = (date: Date) => date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
+  const getTimeAgo = (date: Date) => { const minutes = Math.floor((Date.now() - date.getTime()) / (1000 * 60)); return minutes < 60 ? `${minutes}m ago` : `${Math.floor(minutes / 60)}h ago`; };
 
   return (
     <Card className="hover:shadow-md transition-shadow">
@@ -545,21 +446,17 @@ const Orders = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    loadOrders();
-  }, []);
-
-  const loadOrders = async () => {
+  useEffect(() => { (async () => {
     try {
       setError(null);
       const response = await ordersAPI.getAll();
       setOrders(response.orders || []);
-    } catch (err) {
+    } catch {
       setError('Failed to load orders');
     } finally {
       setLoading(false);
     }
-  };
+  })(); }, []);
 
   const handleCallCustomer = (phone: string, customerName: string) => {
     // In a real app, this could integrate with a calling service
@@ -574,11 +471,7 @@ const Orders = () => {
   };
 
   const handleStatusUpdate = (orderId: string, newStatus: Order['status']) => {
-    setOrders(prev => prev.map(order => 
-      order.id === orderId 
-        ? { ...order, status: newStatus }
-        : order
-    ));
+    setOrders(prev => prev.map(order => order.id === orderId ? { ...order, status: newStatus } : order));
     alert(`Order status updated to ${newStatus}`);
   };
 
@@ -618,23 +511,18 @@ const Orders = () => {
   };
 
   const filteredOrders = orders.filter(order => {
-    const matchesSearch = order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         order.customer.name.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = order.orderNumber.toLowerCase().includes(searchTerm.toLowerCase()) || order.customer.name.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
-  const getOrderCounts = () => {
-    return {
-      all: orders.length,
-      pending: orders.filter(o => o.status === 'pending').length,
-      preparing: orders.filter(o => ['confirmed', 'preparing', 'cooking'].includes(o.status)).length,
-      ready: orders.filter(o => ['ready', 'out_for_delivery'].includes(o.status)).length,
-      completed: orders.filter(o => o.status === 'delivered').length,
-    };
+  const counts = {
+    all: orders.length,
+    pending: orders.filter(o => o.status === 'pending').length,
+    preparing: orders.filter(o => ['confirmed', 'preparing', 'cooking'].includes(o.status)).length,
+    ready: orders.filter(o => ['ready', 'out_for_delivery'].includes(o.status)).length,
+    completed: orders.filter(o => o.status === 'delivered').length,
   };
-
-  const counts = getOrderCounts();
 
   return (
     <DashboardLayout>

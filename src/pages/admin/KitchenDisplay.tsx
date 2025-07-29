@@ -344,37 +344,28 @@ const OrderCard: React.FC<{ order: KitchenOrder; onStatusUpdate: (orderId: strin
 };
 
 const KitchenDisplay = () => {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [orders, setOrders] = useState<KitchenOrder[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
+  const [currentTime, setCurrentTime] = useState(new Date()), [orders, setOrders] = useState([]), [loading, setLoading] = useState(true), [error, setError] = useState(null);
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentTime(new Date());
-    }, 1000);
-    return () => clearInterval(interval);
+    const timer = setInterval(() => setCurrentTime(new Date()), 1000);
+    return () => clearInterval(timer);
   }, []);
-
   useEffect(() => {
     loadKitchenOrders();
     const interval = setInterval(loadKitchenOrders, 30000);
     return () => clearInterval(interval);
   }, []);
-
   const loadKitchenOrders = async () => {
     try {
       setError(null);
       const response = await kitchenAPI.getQueue();
       setOrders(response.orders || []);
-    } catch (err) {
+    } catch {
       setError('Failed to load kitchen orders');
     } finally {
       setLoading(false);
     }
   };
-
-  const handleStatusUpdate = async (orderId: string, status: string) => {
+  const handleStatusUpdate = async (orderId, status) => {
     try {
       await kitchenAPI.updateStatus(orderId, status);
       await loadKitchenOrders();
@@ -382,40 +373,22 @@ const KitchenDisplay = () => {
       console.error('Failed to update order status:', error);
     }
   };
-
-  const handleToggleItem = async (orderId: string, itemId: string) => {
+  const handleToggleItem = async (orderId, itemId) => {
     try {
-      setOrders(prev => prev.map(order => 
-        order.id === orderId 
-          ? {
-              ...order,
-              completedItems: order.completedItems.includes(itemId)
-                ? order.completedItems.filter(id => id !== itemId)
-                : [...order.completedItems, itemId]
-            }
-          : order
-      ));
+      setOrders(prev => prev.map(order => order.id === orderId ? {
+        ...order,
+        completedItems: order.completedItems.includes(itemId)
+          ? order.completedItems.filter(id => id !== itemId)
+          : [...order.completedItems, itemId]
+      } : order));
     } catch (error) {
       console.error('Failed to toggle item:', error);
     }
   };
-
-  const pendingOrders = orders.filter(order => 
-    ['pending', 'acknowledged'].includes(order.status)
-  );
-  
-  const activeOrders = orders.filter(order => 
-    ['preparing', 'cooking'].includes(order.status)
-  );
-  
-  const readyOrders = orders.filter(order => 
-    order.status === 'ready'
-  );
-
-  const avgPrepTime = orders.length > 0 
-    ? Math.round(orders.reduce((sum, order) => sum + order.estimatedPrepTime, 0) / orders.length)
-    : 0;
-
+  const pendingOrders = orders.filter(order => ['pending', 'acknowledged'].includes(order.status)),
+    activeOrders = orders.filter(order => ['preparing', 'cooking'].includes(order.status)),
+    readyOrders = orders.filter(order => order.status === 'ready'),
+    avgPrepTime = orders.length > 0 ? Math.round(orders.reduce((sum, order) => sum + order.estimatedPrepTime, 0) / orders.length) : 0;
   return (
     <div className="min-h-screen bg-gray-50 p-4 lg:p-6">
       {/* Header */}
@@ -425,27 +398,15 @@ const KitchenDisplay = () => {
             <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">Kitchen Display</h1>
             <p className="text-sm sm:text-lg text-gray-600">Order Queue & Management</p>
           </div>
-          
           <div className="text-center sm:text-right">
             <div className="text-lg sm:text-xl lg:text-2xl font-mono font-bold">
-              {currentTime.toLocaleTimeString('en-US', { 
-                hour12: false, 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit' 
-              })}
+              {currentTime.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' })}
             </div>
             <div className="text-xs sm:text-sm text-gray-600">
-              {currentTime.toLocaleDateString('en-US', { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-              })}
+              {currentTime.toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
             </div>
           </div>
         </div>
-
         {/* Quick Stats */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 lg:gap-4">
           <div className="bg-white p-3 lg:p-4 rounded-lg border">
@@ -461,97 +422,61 @@ const KitchenDisplay = () => {
             <div className="text-xs lg:text-sm text-gray-600">Ready for Pickup</div>
           </div>
           <div className="bg-white p-3 lg:p-4 rounded-lg border">
-            <div className="text-lg lg:text-2xl font-bold text-gray-600">
-              {avgPrepTime}
-            </div>
+            <div className="text-lg lg:text-2xl font-bold text-gray-600">{avgPrepTime}</div>
             <div className="text-xs lg:text-sm text-gray-600">Avg Prep Time (min)</div>
           </div>
         </div>
       </div>
-
-        {/* Order Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
-          {/* Error Message */}
-          {error && (
-            <div className="col-span-1 lg:col-span-3 p-4 bg-red-50 border border-red-200 rounded-lg">
-              <p className="text-red-700">{error}</p>
+      {/* Order Columns */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 lg:gap-6">
+        {error && (
+          <div className="col-span-1 lg:col-span-3 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <p className="text-red-700">{error}</p>
+          </div>
+        )}
+        {loading && (
+          <div className="col-span-1 lg:col-span-3 flex items-center justify-center py-8">
+            <div className="text-center">
+              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-2"></div>
+              <span>Loading kitchen orders...</span>
             </div>
-          )}
-
-          {/* Loading State */}
-          {loading && (
-            <div className="col-span-1 lg:col-span-3 flex items-center justify-center py-8">
-              <div className="text-center">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-orange-600 mx-auto mb-2"></div>
-                <span>Loading kitchen orders...</span>
-              </div>
+          </div>
+        )}
+        {!loading && !error && (
+          <>
+            {/* Pending Orders */}
+            <div className="space-y-3 lg:space-y-4">
+              <h2 className="text-lg lg:text-xl font-bold text-blue-600 mb-3 lg:mb-4">New Orders ({pendingOrders.length})</h2>
+              {pendingOrders.map(order => (
+                <OrderCard key={order.id} order={order} onStatusUpdate={handleStatusUpdate} onToggleItem={handleToggleItem} />
+              ))}
+              {pendingOrders.length === 0 && (
+                <div className="text-center py-8 text-gray-500">No pending orders</div>
+              )}
             </div>
-          )}
-
-          {!loading && !error && (
-            <>
-              {/* Pending Orders */}
-              <div className="space-y-3 lg:space-y-4">
-                <h2 className="text-lg lg:text-xl font-bold text-blue-600 mb-3 lg:mb-4">
-                  New Orders ({pendingOrders.length})
-                </h2>
-                {pendingOrders.map((order) => (
-                  <OrderCard 
-                    key={order.id} 
-                    order={order} 
-                    onStatusUpdate={handleStatusUpdate}
-                    onToggleItem={handleToggleItem}
-                  />
-                ))}
-                {pendingOrders.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    No pending orders
-                  </div>
-                )}
-              </div>
-
-              {/* Active Orders */}
-              <div className="space-y-3 lg:space-y-4">
-                <h2 className="text-lg lg:text-xl font-bold text-orange-600 mb-3 lg:mb-4">
-                  In Progress ({activeOrders.length})
-                </h2>
-                {activeOrders.map((order) => (
-                  <OrderCard 
-                    key={order.id} 
-                    order={order} 
-                    onStatusUpdate={handleStatusUpdate}
-                    onToggleItem={handleToggleItem}
-                  />
-                ))}
-                {activeOrders.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    No orders in progress
-                  </div>
-                )}
-              </div>
-
-              {/* Ready Orders */}
-              <div className="space-y-4">
-                <h2 className="text-xl font-bold text-green-600 mb-4">
-                  Ready ({readyOrders.length})
-                </h2>
-                {readyOrders.map((order) => (
-                  <OrderCard 
-                    key={order.id} 
-                    order={order} 
-                    onStatusUpdate={handleStatusUpdate}
-                    onToggleItem={handleToggleItem}
-                  />
-                ))}
-                {readyOrders.length === 0 && (
-                  <div className="text-center py-8 text-gray-500">
-                    No orders ready
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </div>
+            {/* Active Orders */}
+            <div className="space-y-3 lg:space-y-4">
+              <h2 className="text-lg lg:text-xl font-bold text-orange-600 mb-3 lg:mb-4">In Progress ({activeOrders.length})</h2>
+              {activeOrders.map(order => (
+                <OrderCard key={order.id} order={order} onStatusUpdate={handleStatusUpdate} onToggleItem={handleToggleItem} />
+              ))}
+              {activeOrders.length === 0 && (
+                <div className="text-center py-8 text-gray-500">No orders in progress</div>
+              )}
+            </div>
+            {/* Ready Orders */}
+            <div className="space-y-4">
+              <h2 className="text-xl font-bold text-green-600 mb-4">Ready ({readyOrders.length})</h2>
+              {readyOrders.map(order => (
+                <OrderCard key={order.id} order={order} onStatusUpdate={handleStatusUpdate} onToggleItem={handleToggleItem} />
+              ))}
+              {readyOrders.length === 0 && (
+                <div className="text-center py-8 text-gray-500">No orders ready</div>
+              )}
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 };

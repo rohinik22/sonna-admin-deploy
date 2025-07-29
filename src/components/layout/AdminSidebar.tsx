@@ -4,19 +4,8 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { X } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
-import {
-  LayoutDashboard,
-  ShoppingCart,
-  MenuSquare,
-  BarChart3,
-  Settings,
-  Plus,
-  AlertTriangle,
-  Package,
-  Users
-} from 'lucide-react';
+import { X, LayoutDashboard, ShoppingCart, MenuSquare, BarChart3, Settings, Plus, AlertTriangle, Package, Users } from 'lucide-react';
 
 // Sidebar items as specified in guide.md: "Sidebar: Menu | Orders | Analytics | Settings"
 const navigationItems = [

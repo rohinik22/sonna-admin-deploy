@@ -1,20 +1,18 @@
 import React, { useState, useEffect } from 'react';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { ChevronDown, ChevronRight } from 'lucide-react';
+import { ChevronDown, ChevronRight, Search, Plus, Edit3, Trash2, Eye, EyeOff, Clock, Star, AlertTriangle, Image as ImageIcon, Tag, Save, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { FaRupeeSign } from "react-icons/fa";
 import { useLocation } from 'react-router-dom';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { menuAPI } from '@/lib/api';
 import { Switch } from '@/components/ui/switch';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Search, Plus, Edit3, Trash2, Eye, EyeOff, Clock, Star, AlertTriangle, Image as ImageIcon, Tag, Save, X } from 'lucide-react';
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 
 interface MenuItem {
   id: string;
@@ -194,55 +192,33 @@ const AddMenuItemDialog: React.FC<{
     dietaryInfo: []
   });
 
-  React.useEffect(() => {
-    if (editItem) {
-      setFormData({
-        name: editItem.name,
-        description: editItem.description,
-        price: editItem.price,
-        originalPrice: editItem.originalPrice,
-        halfKgPrice: editItem.halfKgPrice,
-        fullKgPrice: editItem.fullKgPrice,
-        category: editItem.category,
-        image: editItem.image || '',
-        isAvailable: editItem.isAvailable,
-        preparationTime: editItem.preparationTime,
-        calories: editItem.calories,
-        allergens: editItem.allergens,
-        ingredients: editItem.ingredients,
-        customizations: editItem.customizations,
-        isVegan: editItem.isVegan,
-        isVegetarian: editItem.isVegetarian,
-        isGlutenFree: editItem.isGlutenFree,
-        isPopular: editItem.isPopular,
-        isSignature: editItem.isSignature,
-        isBestSeller: editItem.isBestSeller,
-        spiceLevel: editItem.spiceLevel,
-        dietaryInfo: editItem.dietaryInfo
-      });
-    } else {
-      setFormData({
-        name: '',
-        description: '',
-        price: 0,
-        category: '',
-        isAvailable: true,
-        preparationTime: '15 min',
-        calories: 0,
-        allergens: [],
-        ingredients: [],
-        customizations: [],
-        isVegan: false,
-        isVegetarian: true,
-        isGlutenFree: false,
-        isPopular: false,
-        isSignature: false,
-        isBestSeller: false,
-        spiceLevel: 0,
-        dietaryInfo: [],
-        image: ''
-      });
-    }
+  useEffect(() => {
+    setFormData(editItem ? {
+      name: editItem.name,
+      description: editItem.description,
+      price: editItem.price,
+      originalPrice: editItem.originalPrice,
+      halfKgPrice: editItem.halfKgPrice,
+      fullKgPrice: editItem.fullKgPrice,
+      category: editItem.category,
+      image: editItem.image || '',
+      isAvailable: editItem.isAvailable,
+      preparationTime: editItem.preparationTime,
+      calories: editItem.calories,
+      allergens: editItem.allergens,
+      ingredients: editItem.ingredients,
+      customizations: editItem.customizations,
+      isVegan: editItem.isVegan,
+      isVegetarian: editItem.isVegetarian,
+      isGlutenFree: editItem.isGlutenFree,
+      isPopular: editItem.isPopular,
+      isSignature: editItem.isSignature,
+      isBestSeller: editItem.isBestSeller,
+      spiceLevel: editItem.spiceLevel,
+      dietaryInfo: editItem.dietaryInfo
+    } : {
+      name: '', description: '', price: 0, category: '', isAvailable: true, preparationTime: '15 min', calories: 0, allergens: [], ingredients: [], customizations: [], isVegan: false, isVegetarian: true, isGlutenFree: false, isPopular: false, isSignature: false, isBestSeller: false, spiceLevel: 0, dietaryInfo: [], image: ''
+    });
   }, [editItem, isOpen]);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -255,24 +231,9 @@ const AddMenuItemDialog: React.FC<{
     onClose();
   };
 
-  const handleAllergenToggle = (allergen: string) => {
-    setFormData(prev => ({
-      ...prev,
-      allergens: prev.allergens.includes(allergen) 
-        ? prev.allergens.filter(a => a !== allergen)
-        : [...prev.allergens, allergen]
-    }));
-  };
-
-  const handleIngredientChange = (value: string) => {
-    const ingredients = value.split(',').map(i => i.trim()).filter(i => i.length > 0);
-    setFormData(prev => ({ ...prev, ingredients }));
-  };
-
-  const handleCustomizationChange = (value: string) => {
-    const customizations = value.split(',').map(c => c.trim()).filter(c => c.length > 0);
-    setFormData(prev => ({ ...prev, customizations }));
-  };
+  const handleAllergenToggle = (allergen: string) => setFormData(prev => ({ ...prev, allergens: prev.allergens.includes(allergen) ? prev.allergens.filter(a => a !== allergen) : [...prev.allergens, allergen] }));
+  const handleIngredientChange = (value: string) => setFormData(prev => ({ ...prev, ingredients: value.split(',').map(i => i.trim()).filter(i => i) }));
+  const handleCustomizationChange = (value: string) => setFormData(prev => ({ ...prev, customizations: value.split(',').map(c => c.trim()).filter(c => c) }));
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
@@ -599,7 +560,7 @@ const MenuManagement = () => {
 
   // Load menu data from database
   useEffect(() => {
-    const loadMenuData = async () => {
+    (async () => {
       try {
         setLoading(true);
         const [itemsData, categoriesData] = await Promise.all([
@@ -614,15 +575,13 @@ const MenuManagement = () => {
       } finally {
         setLoading(false);
       }
-    };
-    loadMenuData();
+    })();
   }, []);
 
   // Check if we should open the add menu dialog from navigation state
   useEffect(() => {
     if (location.state?.openAddMenuDialog) {
       setShowAddDialog(true);
-      // Clear the state to prevent reopening on subsequent renders
       window.history.replaceState({}, document.title);
     }
   }, [location.state]);
@@ -643,29 +602,10 @@ const MenuManagement = () => {
     }
   };
 
-  const handleSelectItem = (id: string, isSelected: boolean) => {
-    setSelectedItems(prev => {
-      const newSet = new Set(prev);
-      if (isSelected) {
-        newSet.add(id);
-      } else {
-        newSet.delete(id);
-      }
-      setShowBulkActions(newSet.size > 0);
-      return newSet;
-    });
-  };
+  const handleSelectItem = (id: string, isSelected: boolean) => setSelectedItems(prev => { const newSet = new Set(prev); isSelected ? newSet.add(id) : newSet.delete(id); setShowBulkActions(newSet.size > 0); return newSet; });
 
-  const handleSelectAll = () => {
-    const allFilteredIds = new Set(filteredItems.map(item => item.id));
-    setSelectedItems(allFilteredIds);
-    setShowBulkActions(true);
-  };
-
-  const handleClearSelection = () => {
-    setSelectedItems(new Set());
-    setShowBulkActions(false);
-  };
+  const handleSelectAll = () => { setSelectedItems(new Set(filteredItems.map(item => item.id))); setShowBulkActions(true); };
+  const handleClearSelection = () => { setSelectedItems(new Set()); setShowBulkActions(false); };
 
   const handleBulkToggleAvailability = async (isAvailable: boolean) => {
     try {
@@ -701,18 +641,9 @@ const MenuManagement = () => {
     }
   };
 
-  const handleBulkCategoryChange = (newCategory: string) => {
-    setMenuItems(prev => prev.map(item => 
-      selectedItems.has(item.id) ? { ...item, category: newCategory } : item
-    ));
-    alert(`${selectedItems.size} items moved to ${newCategory} category`);
-    handleClearSelection();
-  };
+  const handleBulkCategoryChange = (newCategory: string) => { setMenuItems(prev => prev.map(item => selectedItems.has(item.id) ? { ...item, category: newCategory } : item)); alert(`${selectedItems.size} items moved to ${newCategory} category`); handleClearSelection(); };
 
-  const handleEditItemDialog = (item: MenuItem) => {
-    setEditingItem(item);
-    setShowAddDialog(true);
-  };
+  const handleEditItemDialog = (item: MenuItem) => { setEditingItem(item); setShowAddDialog(true); };
 
   const handleDeleteItem = async (id: string) => {
     try {
@@ -768,18 +699,12 @@ const MenuManagement = () => {
     }
   };
 
-  const handleDialogClose = () => {
-    setShowAddDialog(false);
-    setEditingItem(undefined);
-  };
+  const handleDialogClose = () => { setShowAddDialog(false); setEditingItem(undefined); };
 
   const filteredItems = menuItems.filter(item => {
-    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesSearch = item.name.toLowerCase().includes(searchTerm.toLowerCase()) || item.description.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = categoryFilter === 'All' || item.category === categoryFilter;
-    const matchesAvailability = availabilityFilter === 'all' || 
-                               (availabilityFilter === 'available' && item.isAvailable) ||
-                               (availabilityFilter === 'unavailable' && !item.isAvailable);
+    const matchesAvailability = availabilityFilter === 'all' || (availabilityFilter === 'available' && item.isAvailable) || (availabilityFilter === 'unavailable' && !item.isAvailable);
     return matchesSearch && matchesCategory && matchesAvailability;
   });
 
@@ -787,7 +712,7 @@ const MenuManagement = () => {
     total: menuItems.length,
     available: menuItems.filter(item => item.isAvailable).length,
     unavailable: menuItems.filter(item => !item.isAvailable).length,
-    avgPrice: menuItems.length > 0 ? menuItems.reduce((sum, item) => sum + item.price, 0) / menuItems.length : 0
+    avgPrice: menuItems.length ? menuItems.reduce((sum, item) => sum + item.price, 0) / menuItems.length : 0
   };
 
   return (

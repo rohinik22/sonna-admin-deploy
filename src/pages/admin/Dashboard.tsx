@@ -4,22 +4,16 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
 import { DashboardLayout } from '@/components/layout/DashboardLayout';
-import { TrendingUp, ShoppingCart, DollarSign, Star, Clock, Users, Activity, Zap, Target, ArrowRight, RefreshCw } from 'lucide-react';
+import { Activity, Zap, Target, ArrowRight, RefreshCw } from 'lucide-react';
 import { dashboardAPI } from '@/lib/api';
 
 const Dashboard = () => {
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [isLive, setIsLive] = useState(true);
-  const [orders, setOrders] = useState<any[]>([]);
-  const [stats, setStats] = useState<any[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [currentTime, setCurrentTime] = useState(new Date()), [isLive, setIsLive] = useState(true), [orders, setOrders] = useState([]), [stats, setStats] = useState([]), [loading, setLoading] = useState(true), [error, setError] = useState(null);
 
   useEffect(() => {
     const timer = setInterval(() => setCurrentTime(new Date()), 1000);
     return () => clearInterval(timer);
   }, []);
-
   useEffect(() => {
     loadData();
     const interval = setInterval(loadData, 30000);
@@ -30,24 +24,18 @@ const Dashboard = () => {
     try {
       setError(null);
       const [statsData, ordersData] = await Promise.all([
-        dashboardAPI.getStats(),
-        dashboardAPI.getLiveOrders()
+        dashboardAPI.getStats(), dashboardAPI.getLiveOrders()
       ]);
       setStats(statsData.stats || []);
       setOrders(ordersData.orders || []);
-    } catch (err) {
+    } catch {
       setError('Failed to load data');
     } finally {
       setLoading(false);
     }
   };
-
-  const handleRefresh = () => {
-    setLoading(true);
-    loadData();
-  };
-
-  const getStatusColor = (status: string) => ({
+  const handleRefresh = () => (setLoading(true), loadData());
+  const getStatusColor = (status) => ({
     preparing: 'bg-yellow-100 text-yellow-700',
     cooking: 'bg-orange-100 text-orange-700',
     ready: 'bg-green-100 text-green-700',
@@ -71,26 +59,22 @@ const Dashboard = () => {
           </div>
           <div className="flex items-center gap-3">
             <Button variant="outline" size="sm" onClick={() => setIsLive(!isLive)}>
-              <Activity className="w-4 h-4 mr-2" />
-              {isLive ? 'Pause Live' : 'Resume Live'}
+              <Activity className="w-4 h-4 mr-2" />{isLive ? 'Pause Live' : 'Resume Live'}
             </Button>
             <Button variant="outline" size="sm" onClick={handleRefresh} disabled={loading}>
-              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />
-              Refresh
+              <RefreshCw className={`w-4 h-4 mr-2 ${loading ? 'animate-spin' : ''}`} />Refresh
             </Button>
           </div>
         </div>
-
         {error && (
           <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
             <p className="text-red-700">{error}</p>
           </div>
         )}
-
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 lg:gap-6">
-          {stats.map((stat, index) => (
-            <Card key={index} className="relative overflow-hidden">
+          {stats.map((stat, i) => (
+            <Card key={i} className="relative overflow-hidden">
               <CardHeader className="pb-2">
                 <CardTitle className="text-sm font-medium text-muted-foreground">{stat.label}</CardTitle>
               </CardHeader>
@@ -110,13 +94,11 @@ const Dashboard = () => {
             </Card>
           ))}
         </div>
-
         {/* Live Orders */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Zap className="w-5 h-5 text-orange-500" />
-              Live Orders
+              <Zap className="w-5 h-5 text-orange-500" />Live Orders
             </CardTitle>
             <CardDescription>Real-time order status and kitchen workflow</CardDescription>
           </CardHeader>
@@ -132,25 +114,24 @@ const Dashboard = () => {
               <>
                 <div className="space-y-3">
                   {orders.map((order) => (
-                <div key={order.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
-                  <div>
-                    <div className="font-medium">{order.id}</div>
-                    <div className="text-sm text-muted-foreground">{order.customer}</div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
-                    <div className="text-right">
-                      <div className="font-medium">{order.total}</div>
-                      <div className="text-xs text-muted-foreground">{order.time}</div>
+                    <div key={order.id} className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                      <div>
+                        <div className="font-medium">{order.id}</div>
+                        <div className="text-sm text-muted-foreground">{order.customer}</div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
+                        <div className="text-right">
+                          <div className="font-medium">{order.total}</div>
+                          <div className="text-xs text-muted-foreground">{order.time}</div>
+                        </div>
+                      </div>
                     </div>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            <Button variant="outline" className="w-full mt-4">
-              <ArrowRight className="w-4 h-4 mr-2" />
-              View All Orders
-            </Button>
+                <Button variant="outline" className="w-full mt-4">
+                  <ArrowRight className="w-4 h-4 mr-2" />View All Orders
+                </Button>
               </>
             )}
           </CardContent>

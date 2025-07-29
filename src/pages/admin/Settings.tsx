@@ -6,13 +6,11 @@ import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { useToast } from '@/hooks/use-toast';
 import { settingsAPI } from '@/lib/api';
-import { Settings, Store, Database, Globe, Clock, Mail, Phone, MapPin, Save, RefreshCw, Download, Upload, Trash2, AlertTriangle } from 'lucide-react';
+import { Settings, Store, Globe, Clock, Mail, Phone, MapPin, Save } from 'lucide-react';
 
 const AdminSettings: React.FC = () => {
   const { toast } = useToast();
@@ -21,14 +19,7 @@ const AdminSettings: React.FC = () => {
 
   // Restaurant Settings
   const [restaurant, setRestaurant] = useState({
-    name: '',
-    description: '',
-    address: '',
-    phone: '',
-    email: '',
-    website: '',
-    timezone: 'Asia/Kolkata',
-    currency: 'INR',
+    name: '', description: '', address: '', phone: '', email: '', website: '', timezone: 'Asia/Kolkata', currency: 'INR',
     operatingHours: {
       monday: { open: '10:00', close: '22:00', closed: false },
       tuesday: { open: '10:00', close: '22:00', closed: false },
@@ -42,28 +33,19 @@ const AdminSettings: React.FC = () => {
 
   // System Settings
   const [system, setSystem] = useState({
-    maintenanceMode: false,
-    onlineOrdering: true,
-    loyaltyProgram: true,
-    autoBackup: true,
-    backupFrequency: 'daily',
-    maxOrdersPerDay: 500,
-    orderTimeout: 30,
-    defaultTax: 18,
-    deliveryRadius: 10
+    maintenanceMode: false, onlineOrdering: true, loyaltyProgram: true, autoBackup: true, backupFrequency: 'daily', maxOrdersPerDay: 500, orderTimeout: 30, defaultTax: 18, deliveryRadius: 10
   });
 
   // Load settings from database
   useEffect(() => {
-    const loadSettings = async () => {
+    (async () => {
       try {
         setIsLoading(true);
         const [allSettings, businessHours] = await Promise.all([
           settingsAPI.getAll(),
           settingsAPI.getBusinessHours()
         ]);
-        // Split the settings into restaurant and system categories
-        const restaurantData = {
+        setRestaurant({
           name: allSettings.restaurant_name || '',
           description: allSettings.restaurant_description || '',
           address: allSettings.restaurant_address || '',
@@ -73,8 +55,8 @@ const AdminSettings: React.FC = () => {
           timezone: allSettings.timezone || 'Asia/Kolkata',
           currency: allSettings.currency || 'INR',
           operatingHours: businessHours
-        };
-        const systemData = {
+        });
+        setSystem({
           maintenanceMode: allSettings.maintenance_mode || false,
           onlineOrdering: allSettings.online_ordering || true,
           loyaltyProgram: allSettings.loyalty_program || true,
@@ -84,17 +66,14 @@ const AdminSettings: React.FC = () => {
           orderTimeout: allSettings.order_timeout || 30,
           defaultTax: allSettings.default_tax || 18,
           deliveryRadius: allSettings.delivery_radius || 10
-        };
-        setRestaurant(restaurantData);
-        setSystem(systemData);
+        });
       } catch (err) {
         setError('Failed to load settings');
         console.error('Error loading settings:', err);
       } finally {
         setIsLoading(false);
       }
-    };
-    loadSettings();
+    })();
   }, []);
 
   const handleSaveSettings = async (section: string) => {

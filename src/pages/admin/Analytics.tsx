@@ -13,8 +13,6 @@ const Analytics = () => {
   const [dateRange, setDateRange] = useState('7days');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // Database-driven state
   const [revenueData, setRevenueData] = useState([]);
   const [categoryData, setCategoryData] = useState([]);
   const [customerData, setCustomerData] = useState([]);
@@ -31,16 +29,7 @@ const Analytics = () => {
     try {
       setError(null);
       setLoading(true);
-      
-      const [
-        revenueResponse,
-        categoryResponse,
-        customerResponse,
-        performanceResponse,
-        kpiResponse,
-        topItemsResponse,
-        alertsResponse
-      ] = await Promise.all([
+      const [revenueResponse, categoryResponse, customerResponse, performanceResponse, kpiResponse, topItemsResponse, alertsResponse] = await Promise.all([
         analyticsAPI.getRevenueData(dateRange),
         analyticsAPI.getCategoryData(dateRange),
         analyticsAPI.getCustomerData(dateRange),
@@ -57,7 +46,6 @@ const Analytics = () => {
       setKpiMetrics(kpiResponse || {});
       setTopItems(topItemsResponse || []);
       setAlerts(alertsResponse || []);
-      
     } catch (err) {
       setError('Failed to load analytics data');
       console.error('Analytics loading error:', err);
@@ -71,7 +59,7 @@ const Analytics = () => {
       <div className="flex-1 h-full overflow-hidden">
         <div className="h-full overflow-y-auto">
           <div className="space-y-6 p-6 pb-8">
-            {/* Header - Sticky */}
+            {/* Header */}
             <div className="sticky top-0 z-10 bg-background/80 backdrop-blur-sm border-b pb-4 mb-6">
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-4 sm:space-y-0">
                 <div>
@@ -100,7 +88,7 @@ const Analytics = () => {
               </div>
             </div>
 
-            {/* Key Metrics - Mobile Responsive Grid */}
+            {/* Key Metrics */}
             <div className="space-y-4">
               <h2 className="text-lg font-semibold text-foreground">Key Performance Indicators</h2>
               {loading && (
@@ -203,35 +191,22 @@ const Analytics = () => {
               )}
             </div>
 
-            {/* Analytics Tabs - Clean & Elegant Design */}
+            {/* Analytics Tabs */}
             <div className="space-y-8">
               <h2 className="text-xl font-semibold text-foreground">Detailed Analytics</h2>
               <Tabs defaultValue="revenue" className="w-full">
-                {/* Clean Tab Navigation */}
                 <div className="mb-8">
                   <TabsList className="grid w-full grid-cols-4 h-12 p-1 bg-slate-100 rounded-lg">
-                    <TabsTrigger 
-                      value="revenue" 
-                      className="text-sm font-medium h-10 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200"
-                    >
+                    <TabsTrigger value="revenue" className="text-sm font-medium h-10 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200">
                       Revenue
                     </TabsTrigger>
-                    <TabsTrigger 
-                      value="customers" 
-                      className="text-sm font-medium h-10 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200"
-                    >
+                    <TabsTrigger value="customers" className="text-sm font-medium h-10 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200">
                       Customers
                     </TabsTrigger>
-                    <TabsTrigger 
-                      value="menu" 
-                      className="text-sm font-medium h-10 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200"
-                    >
+                    <TabsTrigger value="menu" className="text-sm font-medium h-10 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200">
                       Menu
                     </TabsTrigger>
-                    <TabsTrigger 
-                      value="operations" 
-                      className="text-sm font-medium h-10 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200"
-                    >
+                    <TabsTrigger value="operations" className="text-sm font-medium h-10 rounded-md data-[state=active]:bg-white data-[state=active]:shadow-sm transition-all duration-200">
                       Operations
                     </TabsTrigger>
                   </TabsList>
@@ -315,19 +290,17 @@ const Analytics = () => {
                                   <Cell key={`cell-${index}`} fill={entry.color} />
                                 ))}
                               </Pie>
-                              <Tooltip 
-                                content={({ active, payload }) => {
-                                  if (active && payload && payload.length) {
-                                    return (
-                                      <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
-                                        <p className="font-semibold text-gray-900">{payload[0].payload.name}</p>
-                                        <p className="text-blue-600">{payload[0].value}% of total revenue</p>
-                                      </div>
-                                    );
-                                  }
-                                  return null;
-                                }}
-                              />
+                              <Tooltip content={({ active, payload }) => {
+                                if (active && payload && payload.length) {
+                                  return (
+                                    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
+                                      <p className="font-semibold text-gray-900">{payload[0].payload.name}</p>
+                                      <p className="text-blue-600">{payload[0].value}% of total revenue</p>
+                                    </div>
+                                  );
+                                }
+                                return null;
+                              }} />
                             </PieChart>
                           </ResponsiveContainer>
                         </div>
@@ -369,24 +342,18 @@ const Analytics = () => {
                             <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
                             <XAxis dataKey="month" className="text-muted-foreground" />
                             <YAxis className="text-muted-foreground" />
-                            <Tooltip 
-                              content={({ active, payload, label }) => {
-                                if (active && payload && payload.length) {
-                                  return (
-                                    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
-                                      <p className="font-semibold text-gray-900">{label}</p>
-                                      <p className="text-blue-600">
-                                        New Customers: {payload[0].value}
-                                      </p>
-                                      <p className="text-green-600">
-                                        Returning Customers: {payload[1].value}
-                                      </p>
-                                    </div>
-                                  );
-                                }
-                                return null;
-                              }}
-                            />
+                            <Tooltip content={({ active, payload, label }) => {
+                              if (active && payload && payload.length) {
+                                return (
+                                  <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
+                                    <p className="font-semibold text-gray-900">{label}</p>
+                                    <p className="text-blue-600">New Customers: {payload[0].value}</p>
+                                    <p className="text-green-600">Returning Customers: {payload[1].value}</p>
+                                  </div>
+                                );
+                              }
+                              return null;
+                            }} />
                             <Bar dataKey="newCustomers" fill="#3b82f6" name="New Customers" radius={[4, 4, 0, 0]} />
                             <Bar dataKey="returningCustomers" fill="#22c55e" name="Returning Customers" radius={[4, 4, 0, 0]} />
                           </BarChart>
@@ -510,44 +477,20 @@ const Analytics = () => {
                             <XAxis dataKey="time" className="text-muted-foreground" />
                             <YAxis yAxisId="left" className="text-muted-foreground" />
                             <YAxis yAxisId="right" orientation="right" className="text-muted-foreground" />
-                            <Tooltip 
-                              content={({ active, payload, label }) => {
-                                if (active && payload && payload.length) {
-                                  return (
-                                    <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
-                                      <p className="font-semibold text-gray-900">{label}</p>
-                                      <p className="text-blue-600 font-medium">
-                                        Orders: {payload[0].value}
-                                      </p>
-                                      <p className="text-orange-600 font-medium">
-                                        Avg Prep Time: {payload[1].value} minutes
-                                      </p>
-                                    </div>
-                                  );
-                                }
-                                return null;
-                              }}
-                            />
-                            <Line 
-                              yAxisId="left"
-                              type="monotone" 
-                              dataKey="orders" 
-                              stroke="#3b82f6" 
-                              strokeWidth={3}
-                              dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }}
-                              activeDot={{ r: 6, fill: '#3b82f6' }}
-                              name="Orders"
-                            />
-                            <Line 
-                              yAxisId="right"
-                              type="monotone" 
-                              dataKey="avgPrepTime" 
-                              stroke="#f59e0b" 
-                              strokeWidth={3}
-                              dot={{ fill: '#f59e0b', strokeWidth: 2, r: 4 }}
-                              activeDot={{ r: 6, fill: '#f59e0b' }}
-                              name="Preparation Time"
-                            />
+                            <Tooltip content={({ active, payload, label }) => {
+                              if (active && payload && payload.length) {
+                                return (
+                                  <div className="bg-white border border-gray-200 rounded-lg shadow-lg p-4">
+                                    <p className="font-semibold text-gray-900">{label}</p>
+                                    <p className="text-blue-600 font-medium">Orders: {payload[0].value}</p>
+                                    <p className="text-orange-600 font-medium">Avg Prep Time: {payload[1].value} minutes</p>
+                                  </div>
+                                );
+                              }
+                              return null;
+                            }} />
+                            <Line yAxisId="left" type="monotone" dataKey="orders" stroke="#3b82f6" strokeWidth={3} dot={{ fill: '#3b82f6', strokeWidth: 2, r: 4 }} activeDot={{ r: 6, fill: '#3b82f6' }} name="Orders" />
+                            <Line yAxisId="right" type="monotone" dataKey="avgPrepTime" stroke="#f59e0b" strokeWidth={3} dot={{ fill: '#f59e0b', strokeWidth: 2, r: 4 }} activeDot={{ r: 6, fill: '#f59e0b' }} name="Preparation Time" />
                           </LineChart>
                         </ResponsiveContainer>
                       </div>
