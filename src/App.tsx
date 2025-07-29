@@ -3,6 +3,7 @@
  * 🚀 App Component - The main stage where magic happens
  * Application architecture crafted by Mr. Sweet
  */
+import React from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -23,7 +24,6 @@ import Wishlist from "./pages/Wishlist";
 import Checkout from "./pages/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmation";
 import NotFound from "./pages/NotFound";
-<<<<<<< HEAD
 // Admin Pages
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
@@ -35,9 +35,7 @@ import AdminInventory from "./pages/admin/Inventory";
 import OrderManagement from "./pages/admin/OrderManagement";
 import CustomerManagement from "./pages/admin/CustomerManagement";
 import PromotionManagement from "./pages/admin/PromotionManagement";
-=======
 import DatabaseTest from "./components/DatabaseTest";
->>>>>>> 591d7f5222478eb919dd6c7cd6b14aa07059e892
 
 // Enhanced query client with performance optimizations
 const queryClient = new QueryClient({
@@ -53,13 +51,18 @@ const queryClient = new QueryClient({
 
 // Error Boundary Component
 const ErrorBoundary = ({ children }: { children: React.ReactNode }) => {
+  const handleRefresh = () => {
+    // Safer page refresh method
+    window.location.href = window.location.href;
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center p-4">
       <div className="text-center space-y-4">
         <h1 className="text-2xl font-bold text-foreground">Something went wrong</h1>
         <p className="text-muted-foreground">Please refresh the page and try again.</p>
         <button 
-          onClick={() => window.location.reload()} 
+          onClick={handleRefresh}
           className="px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
         >
           Refresh Page
@@ -89,7 +92,6 @@ const App = () => (
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/checkout" element={<Checkout />} />
               <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
-<<<<<<< HEAD
               {/* Admin Routes */}
               <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
               <Route path="/admin/login" element={<AdminLogin />} />
@@ -138,9 +140,7 @@ const App = () => (
                   <PromotionManagement />
                 </ProtectedRoute>
               } />
-=======
               <Route path="/database-test" element={<DatabaseTest />} />
->>>>>>> 591d7f5222478eb919dd6c7cd6b14aa07059e892
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>

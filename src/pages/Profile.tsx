@@ -93,7 +93,12 @@ const Profile = () => {
 
         {/* Contact & Settings */}
         <div className="space-y-3">
-          <Button variant="outline" className="w-full justify-start" onClick={() => window.open('tel:+919876543210')}>
+          <Button variant="outline" className="w-full justify-start" onClick={() => {
+            const newWindow = window.open('tel:+919876543210', '_self');
+            if (newWindow) {
+              newWindow.opener = null;
+            }
+          }}>
             <Phone className="w-4 h-4 mr-3" />
             Contact Support
           </Button>

@@ -1,17 +1,63 @@
 {
   "compilerOptions": {
     "allowJs": true,
-    "lib": ["deno.window"],
-    "strict": true
+    "lib": ["deno.window", "deno.unstable"],
+    "strict": true,
+    "exactOptionalPropertyTypes": true,
+    "noImplicitReturns": true,
+    "noFallthroughCasesInSwitch": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "useUnknownInCatchVariables": true
   },
   "fmt": {
     "files": {
-      "include": ["supabase/functions/"]
+      "include": ["supabase/functions/"],
+      "exclude": ["supabase/functions/**/node_modules/"]
+    },
+    "options": {
+      "useTabs": false,
+      "lineWidth": 100,
+      "indentWidth": 2,
+      "singleQuote": true,
+      "proseWrap": "preserve"
     }
   },
   "lint": {
     "files": {
-      "include": ["supabase/functions/"]
+      "include": ["supabase/functions/"],
+      "exclude": ["supabase/functions/**/node_modules/"]
+    },
+    "rules": {
+      "tags": ["recommended"],
+      "include": [
+        "ban-untagged-todo",
+        "explicit-function-return-type",
+        "no-implicit-any",
+        "no-await-in-loop"
+      ]
     }
+  },
+  "test": {
+    "files": {
+      "include": ["supabase/functions/**/*test.ts", "supabase/functions/**/*_test.ts"]
+    }
+  },
+  "tasks": {
+    "dev": "deno run --allow-net --allow-env --allow-read --watch supabase/functions/admin-login/index.ts",
+    "test": "deno test --allow-all",
+    "check": "deno check supabase/functions/**/*.ts",
+    "lint": "deno lint",
+    "fmt": "deno fmt"
+  },
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".git"
+  ],
+  "imports": {
+    "@supabase/supabase-js": "https://esm.sh/@supabase/supabase-js@2",
+    "bcryptjs": "https://esm.sh/bcryptjs@2",
+    "jsonwebtoken": "https://esm.sh/jsonwebtoken@9"
   }
 }

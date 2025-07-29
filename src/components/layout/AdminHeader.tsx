@@ -33,8 +33,11 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onMenuClick }) => {
   };
 
   const handleViewSite = () => {
-    // Open main site in new tab
-    window.open('/', '_blank');
+    // Safely open main site in new tab with security attributes
+    const newWindow = window.open('/', '_blank', 'noopener,noreferrer');
+    if (newWindow) {
+      newWindow.opener = null;
+    }
   };
 
   return (
