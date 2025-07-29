@@ -1,13 +1,60 @@
-# Sonna Restaurant App 🍕
+# Sonna Admin Backend API
 
-A modern food delivery and restaurant ordering application built with React, TypeScript, and Tailwind CSS.
+This repository contains the backend API for the Sonna Admin Dashboard. All frontend code has been removed, and this now serves as a pure backend API that can be tested with Postman.
 
-## 📋 Complete Development Guide
+## 🚀 Quick Start
 
-**🎯 [View the Complete Development Guide](./guide.md)** - Essential reading for all contributors!
+1. **Start the backend server:**
+   ```bash
+   start-backend.bat
+   ```
 
-The comprehensive guide covers:
-- **Design System & Style Guide** - Colors, typography, component patterns
+2. **Import Postman collection:**
+   - Import `postman-collection.json` into Postman
+   - Test the available endpoints
+
+3. **Stop the backend server:**
+   ```bash
+   stop-backend.bat
+   ```
+
+## � Project Structure
+
+```
+sonna-admin-deploy/
+├── supabase/                 # Supabase backend functions
+│   ├── functions/
+│   │   ├── admin-login/      # Admin authentication endpoint
+│   │   └── shared/           # Shared utilities
+│   └── config.toml           # Supabase configuration
+├── database-setup.sql        # Database schema
+├── postman-collection.json   # Postman test collection
+├── API_README.md            # API documentation
+├── start-backend.bat        # Start server script
+└── stop-backend.bat         # Stop server script
+```
+
+## 🔧 Available Endpoints
+
+- **POST** `/admin-login` - Admin authentication
+
+## 📚 Documentation
+
+See `API_README.md` for detailed API documentation.
+
+## 🧪 Testing
+
+Use the provided Postman collection (`postman-collection.json`) to test all endpoints.
+
+## ⚙️ Environment Setup
+
+Make sure your `.env.local` file contains:
+```
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_anon_key
+SUPABASE_SERVICE_ROLE_KEY=your_service_role_key
+JWT_SECRET=your_jwt_secret
+```
 - **Frontend Architecture** - React patterns, state management, data flow
 - **Backend Integration** - API specs, database schema, real-time features
 - **Admin Dashboard** - Restaurant management interface and workflows

@@ -13,25 +13,25 @@ import { CartProvider } from "@/contexts/CartContext";
 import { WishlistProvider } from "@/contexts/WishlistContext";
 import { ProtectedRoute } from "@/components/ProtectedRoute";
 import Index from "./pages/Index";
-import Search from "./pages/Search";
-import PreBook from "./pages/PreBook";
-import Orders from "./pages/Orders";
-import Profile from "./pages/Profile";
-import Cakes from "./pages/Cakes";
-import Menu from "./pages/Menu";
-import Cart from "./pages/Cart";
-import Wishlist from "./pages/Wishlist";
-import Checkout from "./pages/Checkout";
-import OrderConfirmation from "./pages/OrderConfirmation";
-import NotFound from "./pages/NotFound";
-// Admin Pages
+// import Search from "./pages/Search";
+// import PreBook from "./pages/PreBook";
+// import Orders from "./pages/Orders";
+// import Profile from "./pages/Profile";
+// import Cakes from "./pages/Cakes";
+// import Menu from "./pages/Menu";
+// import Cart from "./pages/Cart";
+// import Wishlist from "./pages/Wishlist";
+// import Checkout from "./pages/Checkout";
+// import OrderConfirmation from "./pages/OrderConfirmation";
+// import NotFound from "./pages/NotFound";
+// // Admin Pages
 import AdminLogin from "./pages/admin/Login";
 import AdminDashboard from "./pages/admin/Dashboard";
 import AdminOrders from "./pages/admin/Orders";
-import AdminMenuManagement from "./pages/admin/MenuManagement";
-import AdminKitchenDisplay from "./pages/admin/KitchenDisplay";
-import AdminAnalytics from "./pages/admin/Analytics";
-import AdminInventory from "./pages/admin/Inventory";
+// import AdminMenuManagement from "./pages/admin/MenuManagement";
+// import AdminKitchenDisplay from "./pages/admin/KitchenDisplay";
+// import AdminAnalytics from "./pages/admin/Analytics";
+// import AdminInventory from "./pages/admin/Inventory";
 import OrderManagement from "./pages/admin/OrderManagement";
 import CustomerManagement from "./pages/admin/CustomerManagement";
 import PromotionManagement from "./pages/admin/PromotionManagement";
@@ -82,7 +82,7 @@ const App = () => (
           <BrowserRouter>
             <Routes>
               <Route path="/" element={<Index />} />
-              <Route path="/search" element={<Search />} />
+              {/* <Route path="/search" element={<Search />} />
               <Route path="/prebook" element={<PreBook />} />
               <Route path="/orders" element={<Orders />} />
               <Route path="/profile" element={<Profile />} />
@@ -91,7 +91,7 @@ const App = () => (
               <Route path="/cart" element={<Cart />} />
               <Route path="/wishlist" element={<Wishlist />} />
               <Route path="/checkout" element={<Checkout />} />
-              <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} />
+              <Route path="/order-confirmation/:orderId" element={<OrderConfirmation />} /> */}
               {/* Admin Routes */}
               <Route path="/admin" element={<Navigate to="/admin/login" replace />} />
               <Route path="/admin/login" element={<AdminLogin />} />
@@ -105,26 +105,7 @@ const App = () => (
                   <AdminOrders />
                 </ProtectedRoute>
               } />
-              <Route path="/admin/menu" element={
-                <ProtectedRoute requiredRole="admin">
-                  <AdminMenuManagement />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/kitchen" element={
-                <ProtectedRoute requiredRole="admin">
-                  <AdminKitchenDisplay />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/analytics" element={
-                <ProtectedRoute requiredRole="admin">
-                  <AdminAnalytics />
-                </ProtectedRoute>
-              } />
-              <Route path="/admin/inventory" element={
-                <ProtectedRoute requiredRole="admin">
-                  <AdminInventory />
-                </ProtectedRoute>
-              } />
+           
               <Route path="/admin/order-management" element={
                 <ProtectedRoute requiredRole="admin">
                   <OrderManagement />
@@ -142,7 +123,7 @@ const App = () => (
               } />
               <Route path="/database-test" element={<DatabaseTest />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
+              {/* <Route path="*" element={<NotFound />} /> */}
             </Routes>
           </BrowserRouter>
         </WishlistProvider>
