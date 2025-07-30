@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Badge } from '@/components/ui/badge';
-import { X } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
 import {
   LayoutDashboard,
@@ -18,8 +17,10 @@ import {
   Users,
   ClipboardList,
   UserCheck,
-  Gift
+  Gift,
+  X
 } from 'lucide-react';
+// import { X, LayoutDashboard, ShoppingCart, MenuSquare, BarChart3, Settings, Plus, AlertTriangle, Package, Users } from 'lucide-react';
 
 // Sidebar items as specified in guide.md: "Sidebar: Menu | Orders | Analytics | Settings"
 const navigationItems = [
@@ -81,11 +82,6 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) =
   const navigate = useNavigate();
 
   // Quick Action Handlers
-  const handleNewOrder = () => {
-    navigate('/admin/orders', { state: { openNewOrderForm: true } });
-    if (isOpen) onClose(); // Close mobile sidebar
-  };
-
   const handleAddMenuItem = () => {
     navigate('/admin/menu', { state: { openAddMenuDialog: true } });
     if (isOpen) onClose(); // Close mobile sidebar
@@ -162,15 +158,6 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) =
               <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 mb-4">
                 Quick Actions
               </h3>
-              <Button 
-                variant="outline" 
-                size="sm" 
-                className="w-full justify-start gap-3 h-10 mb-2 text-sm hover:bg-blue-50 hover:border-blue-200"
-                onClick={handleNewOrder}
-              >
-                <Plus className="h-4 w-4 flex-shrink-0" />
-                New Order
-              </Button>
               <Button 
                 variant="outline" 
                 size="sm" 
@@ -257,15 +244,6 @@ export const AdminSidebar: React.FC<AdminSidebarProps> = ({ isOpen, onClose }) =
             <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider px-2 mb-4">
               Quick Actions
             </h3>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="w-full justify-start gap-3 h-11 mb-2 text-sm hover:bg-blue-50 hover:border-blue-200"
-              onClick={handleNewOrder}
-            >
-              <Plus className="h-4 w-4 flex-shrink-0" />
-              New Order
-            </Button>
             <Button 
               variant="outline" 
               size="sm" 

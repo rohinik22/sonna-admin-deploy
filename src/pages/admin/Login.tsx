@@ -11,6 +11,7 @@ import {
   AlertCircle,
   Loader2
 } from 'lucide-react';
+
 import { useAuth } from '@/lib/auth';
 
 const AdminLogin = () => {
@@ -27,7 +28,7 @@ const AdminLogin = () => {
   useEffect(() => {
     const clearSession = async () => {
       try {
-        await logout() // Clear any existing session
+        await logout(); // Clear any existing session
       } catch (error) {
         // Ignore logout errors
       }
@@ -39,13 +40,13 @@ const AdminLogin = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        const isAuth = await isAuthenticated()
+        const isAuth = await isAuthenticated();
         if (isAuth) {
           const from = (location.state as any)?.from?.pathname || '/admin/dashboard';
           navigate(from, { replace: true });
         }
       } catch (error) {
-        console.error('Auth check error:', error)
+        console.error('Auth check error:', error);
         // Don't redirect on error
       }
     };
@@ -83,7 +84,6 @@ const AdminLogin = () => {
     }
   };
 
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-orange-50 to-yellow-50 flex items-center justify-center p-4">
       <div className="w-full max-w-6xl space-y-8">
@@ -98,17 +98,12 @@ const AdminLogin = () => {
               <p className="text-sm text-orange-600 font-medium">Admin Portal</p>
             </div>
           </div>
-          
         </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          {/* Login Form */}
           <Card className="w-full max-w-md mx-auto">
             <CardHeader className="space-y-1">
               <CardTitle className="text-2xl font-bold text-center">Admin Login</CardTitle>
-              <CardDescription className="text-center">
-                Enter your credentials to access the admin dashboard
-              </CardDescription>
+              <CardDescription className="text-center">Enter your credentials to access the admin dashboard</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               {error && (
@@ -126,7 +121,6 @@ const AdminLogin = () => {
                     <Input
                       id="email"
                       type="email"
-                      placeholder="admin@sonnas.com"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       className="pl-10"
@@ -134,21 +128,21 @@ const AdminLogin = () => {
                       disabled={isLoading}
                     />
                   </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="password">Password</Label>
-                  <div className="relative">
-                    <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="password"
-                      type="password"
-                      placeholder="••••••••"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      className="pl-10"
-                      required
-                      disabled={isLoading}
-                    />
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <div className="relative">
+                      <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                      <Input
+                        id="password"
+                        type="password"
+                        placeholder="••••••••"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        className="pl-10"
+                        required
+                        disabled={isLoading}
+                      />
+                    </div>
                   </div>
                 </div>
                 <Button type="submit" className="w-full" disabled={isLoading}>
@@ -174,10 +168,7 @@ const AdminLogin = () => {
               </form>
             </CardContent>
           </Card>
-
-         
         </div>
-
       </div>
     </div>
   );

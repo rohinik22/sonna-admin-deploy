@@ -1,4 +1,3 @@
-
 /*
  * 🚀 App Component - The main stage where magic happens
  * Application architecture crafted by Mr. Sweet
@@ -26,6 +25,13 @@ import OrderManagement from "./pages/admin/OrderManagement";
 import CustomerManagement from "./pages/admin/CustomerManagement";
 import PromotionManagement from "./pages/admin/PromotionManagement";
 import DatabaseTest from "./components/DatabaseTest";
+import AdminMenuManagement from "./pages/admin/MenuManagement";
+import AdminKitchenDisplay from "./pages/admin/KitchenDisplay";
+import AdminAnalytics from "./pages/admin/Analytics";
+import AdminInventory from "./pages/admin/Inventory";
+import AdminProfile from "./pages/admin/Profile";
+import AdminSettings from "./pages/admin/Settings";
+import NotFound from "./pages/NotFound";
 
 // Enhanced query client with performance optimizations
 const queryClient = new QueryClient({
@@ -107,6 +113,9 @@ const App = () => (
               } />
               <Route path="/database-test" element={<DatabaseTest />} />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="/admin/profile" element={<AdminProfile />} />
+              <Route path="/admin/settings" element={<AdminSettings />} />
+              <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
         </WishlistProvider>

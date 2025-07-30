@@ -3,14 +3,7 @@ import { Bell, Search, User, Menu, LogOut, Settings } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { cn } from '@/lib/utils';
@@ -22,6 +15,9 @@ interface AdminHeaderProps {
 export const AdminHeader: React.FC<AdminHeaderProps> = ({ onMenuClick }) => {
   const navigate = useNavigate();
   const location = useLocation();
+
+  const handleProfile = () => navigate('/admin/profile');
+  const handleSettings = () => navigate('/admin/settings');
 
   const handleLogout = () => {
     // Clear any stored auth tokens/data
@@ -187,11 +183,11 @@ export const AdminHeader: React.FC<AdminHeaderProps> = ({ onMenuClick }) => {
                 </div>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
-              <DropdownMenuItem className="bg-background hover:bg-muted">
+              <DropdownMenuItem className="bg-background hover:bg-muted" onClick={handleProfile}>
                 <User className="mr-2 h-4 w-4" />
                 <span>Profile</span>
               </DropdownMenuItem>
-              <DropdownMenuItem className="bg-background hover:bg-muted">
+              <DropdownMenuItem className="bg-background hover:bg-muted" onClick={handleSettings}>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
               </DropdownMenuItem>

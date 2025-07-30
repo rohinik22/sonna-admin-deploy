@@ -28,10 +28,12 @@ const Index = () => {
           <Header />
           <LandingHero />
           <FloatingCart />
-          
-          <FloatingActionButton onClick={() => navigate('/cart')}>
-            <Plus className="w-6 h-6" />
-          </FloatingActionButton>
+
+          <div className="fixed bottom-36 right-4 z-20">
+            <FloatingActionButton onClick={() => navigate('/cart')}>
+              <Plus className="w-6 h-6" />
+            </FloatingActionButton>
+          </div>
           
           <BottomNav />
         </div>
