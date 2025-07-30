@@ -20,7 +20,6 @@ import {
   Gift,
   X
 } from 'lucide-react';
-// import { X, LayoutDashboard, ShoppingCart, MenuSquare, BarChart3, Settings, Plus, AlertTriangle, Package, Users } from 'lucide-react';
 
 // Sidebar items as specified in guide.md: "Sidebar: Menu | Orders | Analytics | Settings"
 const navigationItems = [
